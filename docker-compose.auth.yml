@@ -1,0 +1,22 @@
+version: '3.7'
+
+volumes:
+  data:
+    driver: local
+services:
+  auth:
+    ports:
+      - "3000:3000"
+    build:     
+      context: ./
+      target: runner
+      dockerfile: ./Dockerfile
+  postgres:
+    image: postgres:9.6
+    environment:
+      POSTGRES_USER: apart
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: auth
+    restart: 'unless-stopped'
+    ports:
+      - 5432:5432
