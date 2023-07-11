@@ -1,3 +1,5 @@
+import { ExternalAuthTypeEnum } from '../../../enums/ExternalAuthTypeEnum';
+
 const properties = {
   email: { type: 'string', format: 'email' },
   password: { type: 'string', minLength: 8 },
@@ -8,7 +10,7 @@ const properties = {
     },
   },
   externalId: { type: 'string' },
-  externalType: { type: 'string' },
+  externalType: { enum: ExternalAuthTypeEnum },
 };
 
 export const createSchema = {

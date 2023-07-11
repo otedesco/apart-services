@@ -1,11 +1,10 @@
-import { ACCOUNT_TABLE } from '../../../configs/DBConfig';
 import { Account } from '../interfaces/AccountInterface';
 import { Accounts } from '../models/AccountModel';
 
 export class AccountRepository {
   private TABLE: string;
   constructor() {
-    this.TABLE = ACCOUNT_TABLE;
+    this.TABLE = Accounts.tableName;
   }
 
   public async findByEmail(email: string) {

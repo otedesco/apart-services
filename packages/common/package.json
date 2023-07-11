@@ -14,7 +14,9 @@
     "clean": "rm -rf node_modules && rm -rf .turbo"
   },
   "dependencies": {
-    "bcryptjs": "^2.4.3"
+    "bcryptjs": "^2.4.3",
+    "objection": "^3.0.4",
+    "objection-db-errors": "^1.1.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

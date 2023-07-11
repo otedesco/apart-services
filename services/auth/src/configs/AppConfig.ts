@@ -2,7 +2,7 @@ import { config } from 'dotenv';
 config({ path: `.env.${process.env.NODE_ENV || 'development'}.local` });
 const environment = process.env;
 
-export const APP_NAME = environment.APP_NAME || 'serverus';
+export const APP_NAME = environment.APP_NAME || 'auth';
 export const NODE_ENV = environment.NODE_ENV || 'development';
 export const PORT = environment.PORT || 3000;
 

@@ -1,9 +1,9 @@
-import { Model, ModelObject } from 'objection';
+import { BaseModel, ModelObject } from 'commons';
 
 import { ACCOUNT_TABLE } from '../../../configs/DBConfig';
 import { Account } from '../interfaces/AccountInterface';
 
-export class Accounts extends Model implements Account {
+export class Accounts extends BaseModel implements Account {
   id!: number;
   email: string;
   password: string;
@@ -13,20 +13,7 @@ export class Accounts extends Model implements Account {
   roles: string[];
   sessions: string[];
 
-  created_at!: string;
-  updated_at?: string;
-  delete_at?: string;
-
-  static tableName = ACCOUNT_TABLE; // database table name
-  static idColumn = 'id'; // id column name
-
-  $beforeInsert() {
-    this.created_at = new Date().toISOString();
-  }
-
-  $beforeUpdate() {
-    this.updated_at = new Date().toISOString();
-  }
+  static tableName = ACCOUNT_TABLE;
 }
 
 export type AccountShape = ModelObject<Accounts>;

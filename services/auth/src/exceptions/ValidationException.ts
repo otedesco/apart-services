@@ -1,8 +1,5 @@
+import { CustomError, ValidationError } from 'commons';
 import _ from 'lodash';
-
-import { CustomError } from '../interfaces/CustomError';
-
-import { ValidationError } from './Errors';
 
 const DEFAULT_KEYWORD = 'error';
 

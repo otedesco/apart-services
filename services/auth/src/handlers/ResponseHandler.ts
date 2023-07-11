@@ -1,7 +1,5 @@
+import { BaseException, ResourceNotFoundError } from 'commons';
 import _ from 'lodash';
-
-import BaseException from '../exceptions/BaseException';
-import { ResourceNotFoundError } from '../exceptions/Errors';
 
 const buildResponse = (status: number, data: any) => ({ status, data });
 

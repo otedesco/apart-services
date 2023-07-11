@@ -1,8 +1,6 @@
+import { BaseException, NotNullError } from 'commons';
 import { NotNullViolationError } from 'objection-db-errors';
 import { LoggerFactory } from 'server-utils';
-
-import BaseException from '../exceptions/BaseException';
-import { NotNullError } from '../exceptions/Errors';
 
 const { logger } = new LoggerFactory('DatabaseErrorHandler');
 

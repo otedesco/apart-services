@@ -1,9 +1,9 @@
+import { CustomError } from 'commons';
 import { NextFunction, Request, Response } from 'express';
 import _ from 'lodash';
 import { LoggerFactory } from 'server-utils';
 
 import { DatabaseErrorHandler } from '../handlers/DatabaseErrorHandler';
-import { CustomError } from '../interfaces/CustomError';
 
 const { logger } = new LoggerFactory('ErrorHandlerMiddleware');
 

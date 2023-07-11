@@ -12,7 +12,7 @@ export const CONSUME_EVENTS = environment.CONSUME_EVENTS === 'true';
 export const KAFKA_WORKERS_MAX_BYTES_PER_PARTITION = environment.KAFKA_WORKERS_MAX_BYTES_PER_PARTITION
   ? +environment.KAFKA_WORKERS_MAX_BYTES_PER_PARTITION
   : undefined;
-export const CONSUMER_TOPIC_PREFIX = 'nlss';
+export const CONSUMER_TOPIC_PREFIX = 'aprt';
 export const PRODUCE_TOPIC_PREFIX = `${CONSUMER_TOPIC_PREFIX}_${APP_NAME}`;
 export const commitIntervalSeconds = 3;
 
@@ -25,6 +25,7 @@ export enum Actions {
 export enum Entities {
   ACCOUNT = 'account',
 }
+
 export const CREATED_EVENTS_SUFIX = '_added';
 
 export const Events = {

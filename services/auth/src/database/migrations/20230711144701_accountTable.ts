@@ -8,15 +8,13 @@ export async function up(knex: Knex): Promise<void> {
     table.string('email', 45).notNullable().unique();
     table.binary('password', 255).notNullable();
     table.binary('salt', 255).notNullable();
-    table.string('external_auth_type', 15);
     table.string('external_id', 255);
-    table.string('status').notNullable();
 
     table.timestamps(true, true);
 
     table.primary(['id', 'email']);
-    table.foreign(['status']).references(['status']).inTable(ACCOUNT_STATUS_TYPE_TABLE);
-    table.foreign(['external_auth_type']).references(['type']).inTable(EXTERNAL_AUTH_TYPE_TABLE);
+    table.string('status').notNullable().references('status').inTable(ACCOUNT_STATUS_TYPE_TABLE);
+    table.string('external_auth_type').references('type').inTable(EXTERNAL_AUTH_TYPE_TABLE);
   });
 }
 

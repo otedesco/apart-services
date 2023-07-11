@@ -1,4 +1,4 @@
-import { CustomError } from '../interfaces/CustomError';
+import { CustomError } from 'commons';
 
 export class HttpException extends Error implements CustomError {
   public status: number;
