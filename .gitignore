@@ -1,7 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-node_modules
+**/node_modules/**
 /.pnp
 .pnp.js
 
@@ -20,6 +20,7 @@ out/
 # production
 build
 dist
+**/dist/**
 storybook-static
 
 # misc
@@ -27,10 +28,9 @@ storybook-static
 .eslintcache
 
 # local env files
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+**/.env.development.local
+**/.env.test.local
+**/.env.production.local
 
 # debug
 *.log
@@ -38,11 +38,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 debug.log*
-logs
-
-**/apps/web/config/abi/types
-**/packages/smart-router/evm/abis/types
-**/packages/pools/src/abis/types
+**/logs
 
 # Sentry
 .sentryclirc

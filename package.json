@@ -3,8 +3,12 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "lint": "turbo run lint",
+    "start": "turbo run start",
+    "lint": "turbo run lint --",
+    "clean": "turbo run clean && rm -rf node_modules",
     "format:check:staged": "lint-staged",
+    "deploy:local:auth": "docker-compose  -f docker/docker-compose.auth.yml up --build",
+    "docker:build:auth": "docker build -t auth -f services/auth/Dockerfile --no-cache .",
     "prepare": "husky install"
   },
   "devDependencies": {

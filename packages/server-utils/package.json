@@ -10,7 +10,8 @@
   "private": true,
   "scripts": {
     "build": "tsup src/index.ts --format cjs --dts",
-    "dev": "npm run build -- --watch"
+    "dev": "npm run build -- --watch",
+    "clean": "rm -rf node_modules && rm -rf .turbo"
   },
   "dependencies": {
     "compression": "^1.7.4",

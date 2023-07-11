@@ -7,10 +7,11 @@ services:
   auth:
     ports:
       - "3000:3000"
+    restart: 'unless-stopped'
     build:     
-      context: ./
-      target: runner
-      dockerfile: ./Dockerfile
+      context: ../
+      dockerfile: services/auth/Dockerfile
+      target: prod-server
   postgres:
     image: postgres:9.6
     environment:
