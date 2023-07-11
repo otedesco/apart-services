@@ -4,7 +4,7 @@ config({ path: `.env.${process.env.NODE_ENV || 'development'}.local` });
 const environment = process.env;
 
 // DB CONFIG
-export const CONNECTION = environment.PG_CONNECTION || 'postgres://apart:secret@localhost:5432/auth';
+export const CONNECTION = environment.PG_CONNECTION || 'postgres://apart:secret@127.0.0.1:5432/auth';
 export const TIMEOUT = +environment.DB_TIMEOUT || 200;
 export const CONNECTION_KEEP_ALIVE_TIMEOUT = +environment.CONNECTION_KEEP_ALIVE_TIMEOUT || 60000;
 export const CONNECTION_POOL_SIZE = +environment.DB_CONNECTION_POOL_SIZE || 20;

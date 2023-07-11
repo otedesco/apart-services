@@ -26,6 +26,11 @@ WORKDIR /app
 COPY --from=builder /app .
 RUN pnpm install --filter auth --ignore-scripts --prod
 
+FROM build-environment as migration
+WORKDIR /app
+COPY --from=builder /app .
+CMD pnpm run migrate
+
 FROM node:18.16.1-alpine3.17 as prod-server
 WORKDIR /app
 COPY --from=prod-installer /app .
