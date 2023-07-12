@@ -15,7 +15,6 @@ export class AccountService {
   constructor() {
     this.AccountRepository = new AccountRepository();
   }
-
   public async create(account: Account): Promise<Account> {
     await this.validateAccount(account);
 
@@ -24,12 +23,12 @@ export class AccountService {
 
     if (newAccount) notify(ACCOUNT_TOPIC, CREATED_EVENTS_SUFIX, newAccount);
 
-    return;
+    return newAccount;
   }
 
   private async mapAccountData(account: Account): Promise<Account> {
     const accountData = {
-      ..._.omit(account, 'passwordConfirmation'),
+      ...account,
       status: AccountStatusEnum.EMAIL_VERIFICATION_PENDING,
     };
 

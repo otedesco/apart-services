@@ -7,7 +7,7 @@ export const notify = async (
   requester: typeof REQUESTER = REQUESTER,
   callBack?: (message: any, requester: typeof REQUESTER) => void,
 ) => {
-  console.log('event');
+  console.log(topic, suffix, message, requester, typeof callBack);
 };
 
 export const notifySync = async () => {
