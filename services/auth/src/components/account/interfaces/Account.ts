@@ -1,3 +1,5 @@
+import { Profile } from '../../profile/interfaces/Profile';
+
 import { AccountStatusType } from './AccountStatusType';
 import { ExternalAuthType } from './ExternalAuthType';
 import { Session } from './Session';
@@ -10,10 +12,11 @@ export interface Account {
   externalAuthType?: ExternalAuthType['type'] | ExternalAuthType;
   externalId?: string;
   status: AccountStatusType['status'] | AccountStatusType;
-  sessions: Session['id'][] | Session[];
+  sessions?: Session['id'][] | Session[];
+  profiles?: Profile['id'][] | Profile[];
 
-  createdAt?: string;
-  updatedAt?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // interface Account {

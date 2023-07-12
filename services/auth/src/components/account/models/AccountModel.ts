@@ -3,10 +3,12 @@ import { BaseModel, ModelObject } from 'commons';
 import { ACCOUNT_TABLE } from '../../../configs/DBConfig';
 import { AccountStatusEnum } from '../../../enums/AccountStatusEnum';
 import { ExternalAuthTypeEnum } from '../../../enums/ExternalAuthTypeEnum';
+import { Profile } from '../../profile/interfaces/Profile';
 import { Account } from '../interfaces/Account';
 import { AccountStatusType } from '../interfaces/AccountStatusType';
 import { ExternalAuthType } from '../interfaces/ExternalAuthType';
 import { Session } from '../interfaces/Session';
+import { modelSchema } from '../schemas/AccountSchema';
 
 import { AccountStatusTypes } from './AccountStatusTypeModel';
 import { ExternalAuthTypes } from './ExternalAuthTypeModel';
@@ -20,9 +22,17 @@ export class Accounts extends BaseModel implements Account {
   externalAuthType?: ExternalAuthTypeEnum | ExternalAuthType;
   externalId?: string;
   status: AccountStatusEnum | AccountStatusType;
-  sessions: Session['id'][] | Session[];
+  sessions?: Session['id'][] | Session[];
+  profiles?: Profile['id'][] | Profile[];
+
+  createdAt: string;
+  updatedAt: string;
 
   static tableName = ACCOUNT_TABLE;
+
+  static get jsonSchema() {
+    return modelSchema;
+  }
 
   static get relationMappings() {
     return {
