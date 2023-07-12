@@ -3,7 +3,7 @@ import { ExternalAuthTypeEnum } from '../../../enums/ExternalAuthTypeEnum';
 const properties = {
   email: { type: 'string', format: 'email' },
   password: { type: 'string', minLength: 8 },
-  password_confirmation: {
+  passwordConfirmation: {
     type: 'string',
     const: {
       $data: '1/password',

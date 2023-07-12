@@ -1,17 +1,19 @@
-export interface Account {
-  id?: number;
-  email: string;
-  password?: string;
-  password_confirmation?: string;
-  salt?: string;
-  external_type?: string;
-  external_id?: string;
-  status?: string;
-  roles?: string[];
-  sessions?: string[];
+import { AccountStatusType } from './AccountStatusType';
+import { ExternalAuthType } from './ExternalAuthType';
+import { Session } from './Session';
 
-  created_at?: string;
-  updated_at?: string;
+export interface Account {
+  id: string;
+  email: string;
+  password: string;
+  salt: string;
+  externalAuthType?: ExternalAuthType['type'] | ExternalAuthType;
+  externalId?: string;
+  status: AccountStatusType['status'] | AccountStatusType;
+  sessions: Session['id'][] | Session[];
+
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // interface Account {

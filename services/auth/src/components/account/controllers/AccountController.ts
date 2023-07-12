@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { createResponse } from '../../../handlers/ResponseHandler';
-import { Account } from '../interfaces/AccountInterface';
+import { Account } from '../interfaces/Account';
 import { AccountService } from '../services/AccountService';
 
 class AccountController {

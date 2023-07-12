@@ -13,7 +13,7 @@ export async function up(knex: Knex): Promise<void> {
   });
 
   await knex.schema.alterTable(PROFILE_TABLE, table => {
-    table.uuid('organization').references('id').inTable(ORGANIZATION_TABLE);
+    table.uuid('organization').references('id').inTable(ORGANIZATION_TABLE).defaultTo(null);
   });
 }
 

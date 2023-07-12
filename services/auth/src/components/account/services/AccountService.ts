@@ -6,7 +6,7 @@ import { ACCOUNT_TOPIC, CREATED_EVENTS_SUFIX } from '../../../configs/KafkaConfi
 import { AccountStatusEnum } from '../../../enums/AccountStatusEnum';
 import ValidationException from '../../../exceptions/ValidationException';
 import { notify } from '../../../utils/Notifier';
-import { Account } from '../interfaces/AccountInterface';
+import { Account } from '../interfaces/Account';
 import { AccountRepository } from '../repositories/AccountRepository';
 
 export class AccountService {
@@ -29,11 +29,11 @@ export class AccountService {
 
   private async mapAccountData(account: Account): Promise<Account> {
     const accountData = {
-      ..._.omit(account, 'password_confirmation'),
+      ..._.omit(account, 'passwordConfirmation'),
       status: AccountStatusEnum.EMAIL_VERIFICATION_PENDING,
     };
 
-    if (!account.external_type) {
+    if (!account.externalAuthType) {
       const { generatedHash, generatedSalt } = await generateHash(account.password, SALT_ROUNDS);
 
       return { ...accountData, password: generatedHash, salt: generatedSalt };
@@ -42,16 +42,8 @@ export class AccountService {
     return accountData;
   }
 
-  private async validateAccount({
-    email,
-    external_type,
-    external_id,
-    password,
-    password_confirmation,
-  }: Account): Promise<void> {
-    if (external_type && !external_id) throw new ValidationException({ status: 400 });
-
-    if (password !== password_confirmation) throw new ValidationException({ status: 400 });
+  private async validateAccount({ email, externalAuthType, externalId }: Account): Promise<void> {
+    if (externalAuthType && !externalId) throw new ValidationException({ status: 400 });
 
     const account = await this.AccountRepository.findByEmail(email);
     if (account) throw new ValidationException({ status: 400 });

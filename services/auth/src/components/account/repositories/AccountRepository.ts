@@ -1,4 +1,4 @@
-import { Account } from '../interfaces/AccountInterface';
+import { Account } from '../interfaces/Account';
 import { Accounts } from '../models/AccountModel';
 
 export class AccountRepository {
