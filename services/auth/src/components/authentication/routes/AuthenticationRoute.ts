@@ -4,7 +4,7 @@ import { Route } from 'server-utils';
 
 import { validateIncomingData } from '../../../middlewares/SchemaValidator';
 import { AuthenticationController } from '../controllers/AuthenticationController';
-import { signUp } from '../validators/AuthenticationValidator';
+import { signIn, signUp } from '../validators/AuthenticationValidator';
 
 export class AuthenticationRoute implements Route {
   public path: string;
@@ -23,6 +23,12 @@ export class AuthenticationRoute implements Route {
       `${this.path}/sign-up`,
       validateIncomingData(signUp),
       asyncHandler(this.authenticationController.signUp),
+    );
+
+    this.router.post(
+      `${this.path}/sign-in`,
+      validateIncomingData(signIn),
+      asyncHandler(this.authenticationController.signIn),
     );
   }
 }

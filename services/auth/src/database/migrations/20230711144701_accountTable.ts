@@ -6,8 +6,8 @@ export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable(ACCOUNT_TABLE, table => {
     table.specificType('id', 'uuid').notNullable().defaultTo(knex.raw('uuid_generate_v4()')).unique();
     table.string('email', 45).notNullable().unique();
-    table.binary('password', 255).notNullable();
-    table.binary('salt', 255).notNullable();
+    table.string('password', 255).notNullable();
+    table.string('salt', 255).notNullable();
     table.string('external_id', 255);
 
     table.timestamps(true, true);

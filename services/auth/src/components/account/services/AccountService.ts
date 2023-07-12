@@ -1,12 +1,13 @@
-import { generateHash } from 'commons';
+import { generateHash, compareWithHash } from 'commons';
 import _ from 'lodash';
 
 import { SALT_ROUNDS } from '../../../configs/AppConfig';
 import { ACCOUNT_TOPIC, CREATED_EVENTS_SUFIX } from '../../../configs/KafkaConfig';
 import { AccountStatusEnum } from '../../../enums/AccountStatusEnum';
-import ValidationException from '../../../exceptions/ValidationException';
+import { UnauthorizedException } from '../../../exceptions/UnauthorizedException';
+import { ValidationException } from '../../../exceptions/ValidationException';
 import { notify } from '../../../utils/Notifier';
-import { Account } from '../interfaces/Account';
+import { Account, SecuredAccount } from '../interfaces/Account';
 import { AccountRepository } from '../repositories/AccountRepository';
 
 export class AccountService {
@@ -15,15 +16,26 @@ export class AccountService {
   constructor() {
     this.AccountRepository = new AccountRepository();
   }
-  public async create(account: Account, tx = null): Promise<Omit<Account, 'password' | 'salt'>> {
-    await this.validateAccount(account);
+  public async create(payload: Account, tx = null): Promise<SecuredAccount> {
+    await this.validateAccount(payload);
 
-    const accountData = await this.mapAccountData(account);
-    const newAccount = await this.AccountRepository.create(accountData, tx);
+    const accountData = await this.mapAccountData(payload);
+    const account = await this.AccountRepository.create(accountData, tx);
+    const cleanedAccount = this.clean(account);
 
-    if (newAccount) notify(ACCOUNT_TOPIC, CREATED_EVENTS_SUFIX, newAccount);
+    if (payload) notify(ACCOUNT_TOPIC, CREATED_EVENTS_SUFIX, cleanedAccount);
 
-    return _.omit(newAccount, ['password', 'salt']);
+    return cleanedAccount;
+  }
+
+  public async verifyAccount({ email, password }: Pick<Account, 'email' | 'password'>): Promise<SecuredAccount> {
+    const account = await this.AccountRepository.findByEmail(email);
+    if (!account) throw UnauthorizedException;
+
+    const isValid = await compareWithHash(password, account.password);
+    if (isValid) return this.clean(account);
+
+    throw UnauthorizedException;
   }
 
   private async mapAccountData(account: Account): Promise<Account> {
@@ -33,9 +45,8 @@ export class AccountService {
     };
 
     if (!account.externalAuthType && account.password) {
-      const { generatedHash, generatedSalt } = await generateHash(account.password, SALT_ROUNDS);
-
-      return { ...accountData, password: generatedHash, salt: generatedSalt };
+      const [hash, salt] = await generateHash(account.password, SALT_ROUNDS);
+      return { ...accountData, password: hash, salt };
     }
 
     return accountData;
@@ -47,5 +58,9 @@ export class AccountService {
 
     const account = await this.AccountRepository.findByEmail(email);
     if (account) throw new ValidationException({ status: 400 });
+  }
+
+  private clean(account: Account): SecuredAccount {
+    return _.omit(account, ['password', 'salt']);
   }
 }

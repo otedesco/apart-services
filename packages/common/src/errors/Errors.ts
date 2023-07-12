@@ -3,6 +3,11 @@ export const ValidationError = {
   code: 'VALIDATION_ERROR_400',
 };
 
+export const UnauthorizedError = {
+  message: 'Unauthorized',
+  code: 'UNAUTHORIZED_ERROR_401',
+};
+
 export const ResourceNotFoundError = {
   message: 'Resource Not Found',
   code: 'RESOURCE_NOT_FOUND_404',

@@ -19,3 +19,13 @@ export const signUpSchema = {
     lastname: { type: 'string' },
   },
 };
+
+export const signInSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['email', 'password'],
+  properties: {
+    email: { type: 'string', format: 'email' },
+    password: { type: 'string', format: 'password' },
+  },
+};

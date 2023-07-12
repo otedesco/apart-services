@@ -15,12 +15,14 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.1",
     "objection": "^3.0.4",
     "objection-db-errors": "^1.1.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
     "@types/bcryptjs": "^2.4.2",
+    "@types/jsonwebtoken": "^9.0.2",
     "@types/node": "^20.4.1",
     "tsconfig": "workspace:*",
     "tsup": "^7.1.0"

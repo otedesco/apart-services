@@ -32,7 +32,7 @@ const mapErrors = (errors: any[], code: string) =>
     return [...arrayResult, { code, ...errorObj }];
   }, []);
 
-class ValidationException extends Error implements CustomError {
+export class ValidationException extends Error implements CustomError {
   public status: number;
   public code: string;
   public message: string;
@@ -51,5 +51,3 @@ class ValidationException extends Error implements CustomError {
     return new ValidationException({ errors: [{ keyword: DEFAULT_KEYWORD, message, params: {} }] });
   }
 }
-
-export default ValidationException;

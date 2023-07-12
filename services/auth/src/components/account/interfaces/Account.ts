@@ -18,3 +18,5 @@ export interface Account {
   createdAt: string;
   updatedAt: string;
 }
+
+export type SecuredAccount = Omit<Account, 'password' | 'salt'>;

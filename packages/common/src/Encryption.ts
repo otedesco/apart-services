@@ -23,14 +23,18 @@ export async function generateSalt(saltRounds: number) {
   return await encryptionHandler(genSalt(saltRounds));
 }
 
-export async function generateHash(plainTextData: string, saltRounds = 10, salt: string | null = null) {
+export async function generateHash(
+  plainTextData: string,
+  saltRounds = 10,
+  salt: string | null = null,
+): Promise<[hash: string, salt: string]> {
   let generatedSalt = salt;
   if (!generatedSalt) {
     generatedSalt = await generateSalt(saltRounds);
   }
   const generatedHash = await encryptionHandler(hash(plainTextData, generatedSalt));
 
-  return { generatedHash, generatedSalt };
+  return [generatedHash, generatedSalt];
 }
 
 export async function compareWithHash(plainTextData: string, hashedData: string) {
