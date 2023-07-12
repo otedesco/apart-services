@@ -1,12 +1,14 @@
+import { Transaction } from 'objection';
+
 import { Account } from '../interfaces/Account';
 import { Accounts } from '../models/AccountModel';
 
 export class AccountRepository {
-  public async findByEmail(email: string, trx = null) {
-    return await Accounts.query(trx).select().where('email', '=', email).first();
+  public async findByEmail(email: string, tx: Transaction = null) {
+    return await Accounts.query(tx).select().where('email', '=', email).first();
   }
 
-  public async create(account: Account, trx = null) {
-    return await Accounts.query(trx).insert(account);
+  public async create(account: Account, tx: Transaction = null) {
+    return await Accounts.query(tx).insert(account);
   }
 }

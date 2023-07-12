@@ -36,7 +36,7 @@ export class Accounts extends BaseModel implements Account {
 
   static get relationMappings() {
     return {
-      status: {
+      accountStatus: {
         relation: BaseModel.HasOneRelation,
         modelClass: AccountStatusTypes,
         join: {

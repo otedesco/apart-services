@@ -3,7 +3,7 @@ import { ExternalAuthTypeEnum } from '../../../enums/ExternalAuthTypeEnum';
 
 const properties = {
   id: { type: 'string', minLength: 1 },
-  email: { type: 'string', format: 'email' },
+  email: { type: 'string' },
   password: { type: 'string' },
   salt: { type: 'string' },
   externalAuthType: {
@@ -26,7 +26,7 @@ export const modelSchema = {
     createdAt: { type: 'string' },
     updatedAt: { type: 'string' },
   },
-  required: ['id', 'email', 'password', 'salt', 'status', 'createdAt', 'updatedAt'],
+  required: ['email', 'password', 'salt', 'status'],
 };
 
 export const createSchema = {

@@ -10,7 +10,7 @@ export const ResourceNotFoundError = {
 
 export const NotNullError = {
   message: 'Columns {{columns}} of table {{table}} should not be null',
-  code: 'NOT_NULL_ERROR_',
+  code: 'NOT_NULL_ERROR',
 };
 
 export const EncryptionError = ValidationError;

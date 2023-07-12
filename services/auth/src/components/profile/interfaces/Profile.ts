@@ -5,7 +5,7 @@ import { ProfileType } from './ProfileType';
 import { RoleType } from './RoleType';
 
 export interface Profile {
-  id: string;
+  id?: string;
   name: string;
   lastName: string;
   avatarUrl?: string;
@@ -13,9 +13,9 @@ export interface Profile {
   role: RoleType['role'] | RoleType;
   type: ProfileType['type'] | ProfileType;
 
-  account?: Account['id'] | Account;
+  account: Account['id'] | Account;
   organization?: Organization['id'] | Organization | null;
 
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

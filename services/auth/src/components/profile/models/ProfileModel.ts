@@ -30,7 +30,7 @@ export class Profiles extends BaseModel implements Profile {
 
   static get relationMappings() {
     return {
-      role: {
+      profileRoles: {
         relation: BaseModel.HasOneRelation,
         modelClass: RoleTypes,
         join: {
@@ -38,7 +38,7 @@ export class Profiles extends BaseModel implements Profile {
           to: `${this.tableName}.role`,
         },
       },
-      type: {
+      profileTypes: {
         relation: BaseModel.HasOneRelation,
         modelClass: ProfileTypes,
         join: {
@@ -46,7 +46,7 @@ export class Profiles extends BaseModel implements Profile {
           to: `${this.tableName}.type`,
         },
       },
-      account: {
+      profileAccounts: {
         relation: BaseModel.HasOneRelation,
         modelClass: Accounts,
         join: {
@@ -54,7 +54,7 @@ export class Profiles extends BaseModel implements Profile {
           to: `${this.tableName}.account`,
         },
       },
-      organization: {
+      profileOrganizations: {
         relation: BaseModel.HasOneRelation,
         modelClass: Organizations,
         join: {

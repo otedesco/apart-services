@@ -2,6 +2,7 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Application, json, urlencoded } from 'express';
+import expressListRoutes from 'express-list-routes';
 import helmet from 'helmet';
 import hpp from 'hpp';
 import morgan from 'morgan';
@@ -75,7 +76,8 @@ export abstract class App {
     }
 
     this.app.use('/health', (_req, res) => res.status(200).send('Ok'));
-    this.logger.info('Routes loaded.');
+
+    expressListRoutes(this.app);
   }
 
   protected abstract initializeConnections(): Promise<void>;
