@@ -1,9 +1,9 @@
 import { verify } from 'commons';
 import { NextFunction, Request, Response } from 'express';
-import _ from 'lodash';
+import _, { head } from 'lodash';
 
 import { AccountService } from '../components/account/services/AccountService';
-import { PUBLIC_KEY } from '../configs/AppConfig';
+import { PUBLIC_KEY, REFRESH_PUBLIC_KEY } from '../configs/AppConfig';
 import { UnauthorizedException } from '../exceptions/UnauthorizedException';
 
 function getAccessToken({ headers, cookies }: Request): string | null {
@@ -18,6 +18,11 @@ function getAccessToken({ headers, cookies }: Request): string | null {
   return null;
 }
 
+function getRefreshTken({ cookies }: Request): string | null {
+  const refreshToken = _.get(cookies, 'refresh_token');
+  return refreshToken;
+}
+
 async function getAccountFromDB(id: string) {
   const accountService = new AccountService();
   return await accountService.findAccountById(id);
@@ -25,9 +30,13 @@ async function getAccountFromDB(id: string) {
 
 export async function deserializeAccount(req: Request, res: Response, next: NextFunction) {
   const accessToken = getAccessToken(req);
-  if (!accessToken) throw new UnauthorizedException();
+  const refreshToken = getRefreshTken(req);
+  if (!accessToken && !refreshToken) throw new UnauthorizedException();
 
-  const data: { sub: string } = verify(accessToken, PUBLIC_KEY);
+  const publicKey = accessToken ? PUBLIC_KEY : refreshToken ? REFRESH_PUBLIC_KEY : null;
+  if (!publicKey) throw new UnauthorizedException();
+
+  const data: { sub: string } = verify(accessToken || refreshToken, publicKey);
   if (!data) throw new UnauthorizedException();
 
   // sessionAccount = getSessionFromRedis(data.sub)

@@ -2,9 +2,8 @@ import { Router } from 'express';
 import asyncHandler from 'express-async-handler';
 import { Route } from 'server-utils';
 
-import { validateIncomingData } from '../../../middlewares';
+import { deserializeAccount, isPrivate } from '../../../middlewares';
 import { AuthenticationController } from '../controllers/AuthenticationController';
-import { signIn, signUp } from '../validators/AuthenticationValidator';
 
 export class AuthenticationRoute implements Route {
   public path: string;
@@ -15,22 +14,15 @@ export class AuthenticationRoute implements Route {
     this.path = '/auth';
     this.router = Router();
     this.authenticationController = new AuthenticationController();
+    this.initializeMiddlewares();
     this.initializeRoutes();
   }
 
+  private initializeMiddlewares() {
+    this.router.use(deserializeAccount, isPrivate);
+  }
+
   private initializeRoutes() {
-    this.router.post(
-      `${this.path}/sign-up`,
-      validateIncomingData(signUp),
-      asyncHandler(this.authenticationController.signUp),
-    );
-
-    this.router.post(
-      `${this.path}/sign-in`,
-      validateIncomingData(signIn),
-      asyncHandler(this.authenticationController.signIn),
-    );
-
-    this.router.post(`${this.path}/refresh-token`, asyncHandler(this.authenticationController.refreshAuthorization));
+    this.router.post(`${this.path}/sign-out`, asyncHandler(this.authenticationController.signOut));
   }
 }

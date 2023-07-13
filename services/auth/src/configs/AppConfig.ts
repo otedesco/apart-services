@@ -14,14 +14,23 @@ export const CREDENTIALS = environment.CREDENTIALS === 'true' || false;
 
 export const SECRET_KEY = environment.PRIVATE_KEY || 'super-secret-key';
 export const PUBLIC_KEY = environment.PUBLIC_KEY || 'not-so-secret-key';
+export const REFRESH_SECRET_KEY = environment.REFRESH_SECRET_KEY || 'super-secret-key';
+export const REFRESH_PUBLIC_KEY = environment.REFRESH_PUBLIC_KEY || 'not-so-secret-key';
 export const TOKEN_EXPIRE = 7 * 24 * 60 * 60;
+export const SESSION_EXPIRE = 15 * 24 * 60 * 60;
 
 export const ACCESS_TOKEN_COOKIE_OPTIONS = {
-  expires: new Date(Date.now() + TOKEN_EXPIRE * 1000),
-  maxAge: TOKEN_EXPIRE * 1000,
+  expires: new Date(Date.now() + TOKEN_EXPIRE * 100),
+  maxAge: TOKEN_EXPIRE * 100,
   httpOnly: true,
   sameSite: 'lax',
   secure: NODE_ENV === 'production' || false,
+};
+
+export const REFRESH_TOKEN_COOKIE_OPTIONS = {
+  ...ACCESS_TOKEN_COOKIE_OPTIONS,
+  expires: new Date(Date.now() + SESSION_EXPIRE * 100),
+  maxAge: SESSION_EXPIRE * 100,
 };
 
 export const SALT_ROUNDS = +environment.SALT_ROUNDS || 10;

@@ -1,7 +1,14 @@
-import { sign } from 'commons';
+import { sign, verify } from 'commons';
 import _ from 'lodash';
 
-import { SECRET_KEY, TOKEN_EXPIRE } from '../../../configs/AppConfig';
+import {
+  REFRESH_PUBLIC_KEY,
+  REFRESH_SECRET_KEY,
+  SECRET_KEY,
+  SESSION_EXPIRE,
+  TOKEN_EXPIRE,
+} from '../../../configs/AppConfig';
+import { UnauthorizedException } from '../../../exceptions/UnauthorizedException';
 import { Transaction } from '../../../utils/Transaction';
 import { SecuredAccount } from '../../account/interfaces/Account';
 import { AccountService } from '../../account/services/AccountService';
@@ -46,9 +53,24 @@ export class AuthenticationService {
     return result;
   }
 
+  public async refreshToken(refreshToken: string): Promise<{ accessToken: string; refreshToken: string }> {
+    if (!refreshToken) throw new UnauthorizedException();
+
+    const decoded = verify<{ sub: string }>(refreshToken, REFRESH_PUBLIC_KEY);
+    if (!decoded) throw new UnauthorizedException();
+
+    // TODO: THIS SHOULD BE FETCHED FROM REDIS
+    const account = await this.accountService.findAccountById(decoded.sub);
+    if (!account) throw new UnauthorizedException();
+    const result = await this.signSession(account);
+
+    return result;
+  }
+
   private async signSession(account: SecuredAccount): Promise<{ accessToken: string; refreshToken: string }> {
     const accessToken = sign({ sub: account.id }, SECRET_KEY, { expiresIn: `${TOKEN_EXPIRE}s` });
+    const refreshToken = sign({ sub: account.id }, REFRESH_SECRET_KEY, { expiresIn: SESSION_EXPIRE });
 
-    return { accessToken, refreshToken: 'string' };
+    return { accessToken, refreshToken };
   }
 }
