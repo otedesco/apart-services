@@ -38,6 +38,12 @@ export class AccountService {
     throw UnauthorizedException;
   }
 
+  public async findAccountById(id: string): Promise<SecuredAccount> {
+    const account = await this.AccountRepository.findById(id);
+
+    return this.clean(account);
+  }
+
   private async mapAccountData(account: Account): Promise<Account> {
     const accountData = {
       ...account,

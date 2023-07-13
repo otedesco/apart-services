@@ -14,7 +14,7 @@ export const CREDENTIALS = environment.CREDENTIALS === 'true' || false;
 
 export const SECRET_KEY = environment.PRIVATE_KEY || 'super-secret-key';
 export const PUBLIC_KEY = environment.PUBLIC_KEY || 'not-so-secret-key';
-export const TOKEN_EXPIRE = 3600;
+export const TOKEN_EXPIRE = 7 * 24 * 60 * 60;
 
 export const ACCESS_TOKEN_COOKIE_OPTIONS = {
   expires: new Date(Date.now() + TOKEN_EXPIRE * 1000),

@@ -1,11 +1,11 @@
 import { ValidateFunction } from 'ajv';
 import { RequestHandler, Request } from 'express';
 
-import ValidationError from '../exceptions/ValidationException';
+import { ValidationException } from '../exceptions/ValidationException';
 
 export const validateOrThrow = (validator: ValidateFunction, toValidate: any = {}) => {
   if (!validator(toValidate)) {
-    throw new ValidationError({
+    throw new ValidationException({
       errors: validator.errors,
     });
   }

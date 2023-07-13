@@ -8,6 +8,11 @@ export const UnauthorizedError = {
   code: 'UNAUTHORIZED_ERROR_401',
 };
 
+export const ForbidenError = {
+  message: 'You are not allowed to perform this acction',
+  code: 'FORBIDEN_ERROR_403',
+};
+
 export const ResourceNotFoundError = {
   message: 'Resource Not Found',
   code: 'RESOURCE_NOT_FOUND_404',

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import asyncHandler from 'express-async-handler';
 import { Route } from 'server-utils';
 
-import { validateIncomingData } from '../../../middlewares/SchemaValidator';
+import { validateIncomingData } from '../../../middlewares';
 import { AuthenticationController } from '../controllers/AuthenticationController';
 import { signIn, signUp } from '../validators/AuthenticationValidator';
 

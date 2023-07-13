@@ -4,7 +4,7 @@ import { App, ConfigOptions, LoggerFactory } from 'server-utils';
 import { AccountRoute } from './components/account/routes';
 import { AuthenticationRoute } from './components/authentication/routes';
 import knex, { testDBConnection } from './database';
-import { handleError, logError } from './middlewares/ErrorHandlerMiddleware';
+import { handleError, logError } from './middlewares';
 import validateEnv from './utils/validateEnv';
 
 const { logger } = new LoggerFactory('auth-app');

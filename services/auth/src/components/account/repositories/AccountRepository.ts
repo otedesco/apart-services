@@ -8,6 +8,10 @@ export class AccountRepository {
     return await Accounts.query(tx).select().where('email', '=', email).first();
   }
 
+  public async findById(id: string, tx: Transaction = null) {
+    return await Accounts.query(tx).findById(id);
+  }
+
   public async create(account: Account, tx: Transaction = null) {
     return await Accounts.query(tx).insert(account);
   }

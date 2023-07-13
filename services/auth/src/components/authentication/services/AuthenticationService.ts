@@ -32,7 +32,6 @@ export class AuthenticationService {
       return { ...account, profile };
     });
 
-    // create a JWT and store this data on Cache
     return result;
   }
 
@@ -40,14 +39,15 @@ export class AuthenticationService {
     const account = await this.accountService.verifyAccount(payload);
     const result = await this.signSession(account);
 
+    // TODO:
+    // STORE SESSION ON CACHE (REDIS)
+    // STORE SESSION INFORMATION ON POSTGRESS
+
     return result;
   }
 
   private async signSession(account: SecuredAccount): Promise<{ accessToken: string; refreshToken: string }> {
-    const accessToken = sign({ sub: account.id }, SECRET_KEY, { expiresIn: `${TOKEN_EXPIRE}m` });
-    // TODO:
-    // REDIS IMPLEMENTATION
-    // STORE SESSION INFORMATION ON POSTGRESS
+    const accessToken = sign({ sub: account.id }, SECRET_KEY, { expiresIn: `${TOKEN_EXPIRE}s` });
 
     return { accessToken, refreshToken: 'string' };
   }

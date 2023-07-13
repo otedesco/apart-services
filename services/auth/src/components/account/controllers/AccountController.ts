@@ -4,7 +4,7 @@ import { createResponse } from '../../../handlers/ResponseHandler';
 import { Account } from '../interfaces/Account';
 import { AccountService } from '../services/AccountService';
 
-class AccountController {
+export class AccountController {
   private AccountService: AccountService;
 
   constructor() {
@@ -18,5 +18,3 @@ class AccountController {
     res.status(status).json(data);
   };
 }
-
-export default AccountController;
