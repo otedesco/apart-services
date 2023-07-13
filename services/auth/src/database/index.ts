@@ -4,7 +4,7 @@ import { LoggerFactory } from 'server-utils';
 
 import { DEBUG, CONNECTION_POOL_SIZE, CONNECTION, CONNECTION_KEEP_ALIVE_TIMEOUT } from '../configs/DBConfig';
 
-const { logger } = new LoggerFactory('DBConnection');
+const { logger } = LoggerFactory.getInstance(__dirname);
 
 const afterCreate = (conn: any, done: any) => {
   const {

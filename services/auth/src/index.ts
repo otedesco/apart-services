@@ -2,7 +2,7 @@ import { LoggerFactory } from 'server-utils';
 
 import app from './app';
 
-const { logger } = new LoggerFactory('auth-main');
+const { logger } = LoggerFactory.getInstance(__filename);
 
 process.on('unhandledRejection', reason => {
   logger.error('unhandledRejection', reason);

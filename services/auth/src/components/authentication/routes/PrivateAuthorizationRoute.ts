@@ -5,7 +5,7 @@ import { Route } from 'server-utils';
 import { deserializeAccount, isPrivate } from '../../../middlewares';
 import { AuthenticationController } from '../controllers/AuthenticationController';
 
-export class AuthenticationRoute implements Route {
+export class PrivateAuthenticationRoute implements Route {
   public path: string;
   public router: Router;
   public authenticationController: AuthenticationController;

@@ -32,8 +32,13 @@ export class AuthenticationController {
     res.status(status).json(data);
   };
 
-  public signOut = async (req: Request, res: Response) => {
-    console.log();
+  public signOut = async (_req: Request, res: Response) => {
+    // TODO: implement logout logic
+    res.cookie('access_token', '', { maxAge: 1 });
+    res.cookie('refresh_token', '', { maxAge: 1 });
+    res.cookie('logged_in', '', { maxAge: 1 });
+
+    res.status(200).json();
   };
 
   public refreshAuthorization = async ({ cookies }: Request, res: Response) => {

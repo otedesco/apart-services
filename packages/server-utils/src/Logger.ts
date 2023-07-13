@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync } from 'fs';
-import { join } from 'path';
+import { join, basename } from 'path';
 
 import winston from 'winston';
 import winstonDaily from 'winston-daily-rotate-file';
@@ -10,7 +10,9 @@ const loggerInstances = new Map<string, LoggerFactory>();
 export class LoggerFactory {
   public logger: winston.Logger;
 
-  public static getInstance(label: string) {
+  public static getInstance(filename: string) {
+    const label = basename(filename);
+
     const instance = loggerInstances.get(label);
     if (instance) return instance;
 

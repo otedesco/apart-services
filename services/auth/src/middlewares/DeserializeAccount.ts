@@ -1,11 +1,13 @@
 import { verify } from 'commons';
 import { NextFunction, Request, Response } from 'express';
-import _, { head } from 'lodash';
+import _ from 'lodash';
+import { LoggerFactory } from 'server-utils';
 
 import { AccountService } from '../components/account/services/AccountService';
 import { PUBLIC_KEY, REFRESH_PUBLIC_KEY } from '../configs/AppConfig';
 import { UnauthorizedException } from '../exceptions/UnauthorizedException';
 
+const { logger } = LoggerFactory.getInstance(__filename);
 function getAccessToken({ headers, cookies }: Request): string | null {
   const keys = ['Authorization', 'authorization', 'X-Authorization'];
 
@@ -29,15 +31,26 @@ async function getAccountFromDB(id: string) {
 }
 
 export async function deserializeAccount(req: Request, res: Response, next: NextFunction) {
+  logger.info(`Account deserialization attempt ${new Date()} `);
   const accessToken = getAccessToken(req);
   const refreshToken = getRefreshTken(req);
-  if (!accessToken && !refreshToken) throw new UnauthorizedException();
+  if (!accessToken && !refreshToken) {
+    logger.error('No token found on request');
+    return next(new UnauthorizedException());
+  }
 
   const publicKey = accessToken ? PUBLIC_KEY : refreshToken ? REFRESH_PUBLIC_KEY : null;
-  if (!publicKey) throw new UnauthorizedException();
+  if (!publicKey) {
+    logger.error('No public key found');
+    return next(new UnauthorizedException());
+  }
 
   const data: { sub: string } = verify(accessToken || refreshToken, publicKey);
-  if (!data) throw new UnauthorizedException();
+  logger.info(`JWT decoded sucessfully ${data}`);
+  if (!data) {
+    logger.error('Not found data on JWT');
+    return next(new UnauthorizedException());
+  }
 
   // sessionAccount = getSessionFromRedis(data.sub)
   // if !sessionAccount next(UnauthorizedException)
@@ -46,8 +59,12 @@ export async function deserializeAccount(req: Request, res: Response, next: Next
 
   // FIXME: REPLACE THIS IMPLEMENTATION WITH PREVIOUS LOGIG
   const account = await getAccountFromDB(data.sub);
-  if (!account) throw new UnauthorizedException();
+  if (!account) {
+    return next(new UnauthorizedException());
+  }
+
+  logger.info(`Account deserialization successs AccountID: ${data.sub} `);
 
   res.locals.account = account;
-  next();
+  return next();
 }

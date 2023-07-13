@@ -18,7 +18,6 @@ export abstract class App {
 
   constructor(config: ConfigOptions) {
     this.app = express();
-
     this.env = config.env ?? 'development';
     this.port = config.port ?? 3000;
     this.logger = config.logger;
@@ -77,6 +76,7 @@ export abstract class App {
     }
 
     expressListRoutes(this.app);
+    this.logger.info('Routes loaded');
   }
 
   protected abstract initializeConnections(): Promise<void>;

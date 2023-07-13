@@ -2,7 +2,7 @@ import { BaseException, NotNullError } from 'commons';
 import { NotNullViolationError } from 'objection-db-errors';
 import { LoggerFactory } from 'server-utils';
 
-const { logger } = new LoggerFactory('DatabaseErrorHandler');
+const { logger } = LoggerFactory.getInstance(__filename);
 
 export function DatabaseErrorHandler(err: Error) {
   if (err instanceof NotNullViolationError) {
