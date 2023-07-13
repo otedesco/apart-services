@@ -5,7 +5,7 @@ export class BaseException extends Error implements CustomError {
   public status: number;
   public data: {};
 
-  constructor(properties: { message: string; status?: number; data: {}; code: string }) {
+  constructor(properties: { message: string; status?: number; data?: {}; code?: string }) {
     const { message = 'Error', status = 400, code = '', data = {} } = properties;
     super(message);
     this.status = status;

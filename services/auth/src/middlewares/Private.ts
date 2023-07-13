@@ -6,7 +6,7 @@ export const isPrivate = (req: Request, res: Response, next: NextFunction) => {
   try {
     const account = res.locals.account;
     if (!account) {
-      return next(UnauthorizedException);
+      return next(new UnauthorizedException());
     }
 
     next();

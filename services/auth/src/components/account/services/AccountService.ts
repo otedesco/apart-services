@@ -30,12 +30,12 @@ export class AccountService {
 
   public async verifyAccount({ email, password }: Pick<Account, 'email' | 'password'>): Promise<SecuredAccount> {
     const account = await this.AccountRepository.findByEmail(email);
-    if (!account) throw UnauthorizedException;
+    if (!account) throw new UnauthorizedException();
 
     const isValid = await compareWithHash(password, account.password);
     if (isValid) return this.clean(account);
 
-    throw UnauthorizedException;
+    throw new UnauthorizedException();
   }
 
   public async findAccountById(id: string): Promise<SecuredAccount> {

@@ -8,7 +8,7 @@ export const roles =
   (_req: Request, { locals }: Response, next: NextFunction) => {
     const role = _.get(locals, 'account.profile.role');
     if (!allowedRoles.includes(role)) {
-      return next(ForbidenException);
+      return next(new ForbidenException());
     }
 
     next();

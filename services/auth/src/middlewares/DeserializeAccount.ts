@@ -25,10 +25,10 @@ async function getAccountFromDB(id: string) {
 
 export async function deserializeAccount(req: Request, res: Response, next: NextFunction) {
   const accessToken = getAccessToken(req);
-  if (!accessToken) next(UnauthorizedException);
+  if (!accessToken) next(new UnauthorizedException());
 
   const data: { sub: string } = verify(accessToken, PUBLIC_KEY);
-  if (!data) next(UnauthorizedException);
+  if (!data) next(new UnauthorizedException());
 
   // sessionAccount = getSessionFromRedis(data.sub)
   // if !sessionAccount next(UnauthorizedException)
@@ -37,7 +37,7 @@ export async function deserializeAccount(req: Request, res: Response, next: Next
 
   // FIXME: REPLACE THIS IMPLEMENTATION WITH PREVIOUS LOGIG
   const account = getAccountFromDB(data.sub);
-  if (!account) next(UnauthorizedException);
+  if (!account) next(new UnauthorizedException());
 
   res.locals.account = account;
   next();

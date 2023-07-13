@@ -60,6 +60,7 @@ export abstract class App {
 
   private initializeRoutes(apiRoutes: ApiVersionRouters[] | Route[]): void {
     this.logger.info('Loading routes...');
+    this.app.use('/health', (_req, res) => res.status(200).send('Ok'));
 
     if ('version' in apiRoutes[0]) {
       (apiRoutes as ApiVersionRouters[]).forEach(({ version, routes }) => {
@@ -74,8 +75,6 @@ export abstract class App {
         (apiRoutes as Route[]).map(({ router }) => router),
       );
     }
-
-    this.app.use('/health', (_req, res) => res.status(200).send('Ok'));
 
     expressListRoutes(this.app);
   }

@@ -40,7 +40,7 @@ export class ValidationException extends Error implements CustomError {
 
   constructor(properties: { status?: 400; code?: string; errors?: any[] }) {
     const { status = 400, code = ValidationError.code, errors = [] } = properties;
-    super(String(ValidationError.code));
+    super(ValidationError.code);
     this.status = status;
     this.code = code;
     this.message = ValidationError.message;

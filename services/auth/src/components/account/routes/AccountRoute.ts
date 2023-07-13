@@ -15,8 +15,8 @@ export class AccountRoute implements Route {
   constructor() {
     this.router = Router();
     this.accountController = new AccountController();
-    this.initializeMiddlewares();
     this.initializeRoutes();
+    this.initializeMiddlewares();
   }
 
   private initializeMiddlewares() {
