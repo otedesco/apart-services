@@ -9,10 +9,10 @@ import validateEnv from './utils/validateEnv';
 
 const { logger } = new LoggerFactory('auth-app');
 
-const V1Routes = [AccountRoute, AuthenticationRoute];
+const V1Routes = [new AuthenticationRoute(), new AccountRoute()];
 
 const serverConfig: ConfigOptions = {
-  routes: [{ version: '/v1', routes: V1Routes.map(Route => new Route()) }],
+  routes: [{ version: '/v1', routes: V1Routes }],
   logger,
 };
 
