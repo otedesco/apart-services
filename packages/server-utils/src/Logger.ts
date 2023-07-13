@@ -1,10 +1,12 @@
 import { existsSync, mkdirSync } from 'fs';
 import { join, basename } from 'path';
 
+import appRoot from 'app-root-path';
 import winston from 'winston';
 import winstonDaily from 'winston-daily-rotate-file';
 
-const logsDirectory: string = join(__dirname, process.env.LOG_DIR ?? 'logs');
+const logsDirectory = `${appRoot.path}/logs`;
+
 const loggerInstances = new Map<string, LoggerFactory>();
 
 export class LoggerFactory {

@@ -4,18 +4,24 @@ volumes:
   data:
     driver: local
 services:
-  # auth:
-  #   ports:
-  #     - "3000:3000"
-  #   restart: 'unless-stopped'
-  #   env_file:
-  #     - ../services/auth/.env.development.local
-  #   build:     
-  #     context: ../
-  #     dockerfile: services/auth/Dockerfile
-  #     target: prod-server
-  #   depends_on:
-  #     - postgres
+  auth:
+    ports:
+      - "3000:3000"
+    # restart: 'unless-stopped'
+    env_file:
+      - ../services/auth/.env.development.local
+    build:     
+      context: ../
+      dockerfile: services/auth/Dockerfile
+      target: prod-server
+    depends_on:
+      - redis
+      - postgres
+  redis:
+    image: redis/redis-stack:latest
+    ports:
+      - 6379:6379
+      - 8001:8001
   postgres:
     image: postgres:9.6
     environment:

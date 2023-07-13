@@ -45,6 +45,7 @@
     "objection-db-errors": "^1.1.2",
     "pg": "^8.11.1",
     "server-utils": "workspace:*",
-    "commons": "workspace:*"
+    "commons": "workspace:*",
+    "cache": "workspace:*"
   }
 }
