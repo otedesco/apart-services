@@ -1,5 +1,8 @@
 {
   "extends": "tsconfig/node-lib.json",
   "exclude": ["**/*.test.ts"],
-  "include": ["src"]
+  "include": ["src"],
+  "compilerOptions": {
+    "typeRoots": ["src/types/redis"]
+  }
 }

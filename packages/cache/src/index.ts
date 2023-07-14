@@ -1,1 +1,1 @@
-export * as Cache from './RepositoryCache';
+export { default as Cache } from './RepositoryCache';
