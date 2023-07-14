@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync } from 'fs';
-import { join, basename } from 'path';
+import { basename } from 'path';
 
 import appRoot from 'app-root-path';
 import winston from 'winston';

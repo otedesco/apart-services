@@ -3,6 +3,7 @@ import { LoggerFactory } from 'server-utils';
 
 import { UnauthorizedException } from '../exceptions/UnauthorizedException';
 const { logger } = LoggerFactory.getInstance(__filename);
+
 export const isPrivate = (_req: Request, res: Response, next: NextFunction) => {
   try {
     const account = res.locals.account;

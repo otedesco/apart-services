@@ -12,7 +12,7 @@ import { RoleType } from '../interfaces/RoleType';
 import { ProfileTypes } from './ProfileTypeModel';
 import { RoleTypes } from './RoleTypeModel';
 
-export class Profiles extends BaseModel implements Profile {
+export default class Profiles extends BaseModel implements Profile {
   id!: string;
   name: string;
   lastName: string;

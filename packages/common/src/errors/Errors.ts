@@ -23,4 +23,9 @@ export const NotNullError = {
   code: 'NOT_NULL_ERROR',
 };
 
+export const InternalServerError = {
+  message: 'Internal Server Error',
+  code: 'INTERNAL_SERVER_ERROR_500',
+};
+
 export const EncryptionError = ValidationError;

@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import _ from 'lodash';
 import { LoggerFactory } from 'server-utils';
 
-import { AccountService } from '../components/account/services/AccountService';
+import AccountService from '../components/account/services/AccountService';
 import { PUBLIC_KEY, REFRESH_PUBLIC_KEY } from '../configs/AppConfig';
 import { UnauthorizedException } from '../exceptions/UnauthorizedException';
 
@@ -26,8 +26,7 @@ function getRefreshTken({ cookies }: Request): string | null {
 }
 
 async function getAccountFromDB(id: string) {
-  const accountService = new AccountService();
-  return await accountService.findAccountById(id);
+  return await AccountService.findAccountById(id);
 }
 
 export async function deserializeAccount(req: Request, res: Response, next: NextFunction) {
