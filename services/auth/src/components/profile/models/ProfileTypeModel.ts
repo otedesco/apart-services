@@ -5,6 +5,7 @@ import { ProfileType } from '../interfaces/ProfileType';
 
 export class ProfileTypes extends BaseModel implements ProfileType {
   id!: number;
+
   type: ProfileType['type'];
 
   static get tableName() {

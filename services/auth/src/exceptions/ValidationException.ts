@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 const DEFAULT_KEYWORD = 'error';
 
-const createFromDataPath = error => {
+const createFromDataPath = (error) => {
   const { message, data, instancePath, params = {} } = error;
   const { allowedValues } = params;
 
@@ -34,8 +34,11 @@ const mapErrors = (errors: any[], code: string) =>
 
 export class ValidationException extends Error implements CustomError {
   public status: number;
+
   public code: string;
+
   public message: string;
+
   public validationErrors: any[];
 
   constructor(properties: { status?: 400; code?: string; errors?: any[] }) {

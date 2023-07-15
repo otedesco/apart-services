@@ -9,6 +9,7 @@ const { logger } = LoggerFactory.getInstance(__filename);
 
 export function logError(err: CustomError, _req: Request, _res: Response, next: NextFunction) {
   logger.error(err);
+  
   return next(err);
 }
 

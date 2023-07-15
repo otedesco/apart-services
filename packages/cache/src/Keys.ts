@@ -1,16 +1,14 @@
 import _ from 'lodash';
 
-const PREFIX = process.env.CACHE_PREFIX || '';
-const KEY_SEPARATOR = ':';
+import { PREFIX, KEY_SEPARATOR } from './config';
 
 export interface ArgsMapper<T extends Object> {
   (args: T): T;
 }
 
-const normalizeValue = (value: any) => {
-  const stringValue = JSON.stringify(value);
-
-  const newValue = stringValue.replace(/\s+/, '-').toLowerCase();
+const normalizeValue = (value: string) => {
+  // const stringValue = JSON.stringify(value);
+  const newValue = value.replace(/\s+/, '-').toLowerCase();
 
   return newValue;
 };
@@ -21,6 +19,11 @@ const getModifiedObject = <T extends {}>(object: T, argsMapper?: ArgsMapper<T>):
 
   return modified;
 };
+
+export const buildRootKey = (prefix: string) => `${PREFIX}${KEY_SEPARATOR}${prefix}${KEY_SEPARATOR}rootkey`;
+
+export const buildPattern = (customPattern: string) => `${PREFIX}${KEY_SEPARATOR}${customPattern || '*'}`;
+
 
 export const buildKey = <T extends Object>(prefix: string, object: T, argsMapper?: ArgsMapper<T>): string => {
   const modified = getModifiedObject(object, argsMapper);
@@ -54,6 +57,4 @@ export const buildIdKey = <T extends {}>(
   return buildKey(`${prefix}${KEY_SEPARATOR}idkey`, idObject);
 };
 
-export const buildRootKey = (prefix: string) => `${PREFIX}${KEY_SEPARATOR}${prefix}${KEY_SEPARATOR}rootkey`;
 
-export const buildPattern = (customPattern: string) => `${PREFIX}${KEY_SEPARATOR}${customPattern || '*'}`;

@@ -8,6 +8,7 @@ import { signIn, signUp } from '../validators/AuthenticationValidator';
 
 export class AuthenticationRoute implements Route {
   public path: string;
+
   public router: Router;
 
   constructor() {

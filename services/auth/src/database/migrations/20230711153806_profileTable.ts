@@ -5,7 +5,7 @@ import { ProfileTypeEnum } from '../../enums/ProfileTypesEnum';
 import { RoleTypeEnum } from '../../enums/RoleTypeEnum';
 
 export async function up(knex: Knex): Promise<void> {
-  await knex.schema.createTable(PROFILE_TABLE, table => {
+  await knex.schema.createTable(PROFILE_TABLE, (table) => {
     table.specificType('id', 'uuid').notNullable().defaultTo(knex.raw('uuid_generate_v4()')).unique();
     table.string('name', 45).notNullable();
     table.string('last_name', 45);
@@ -29,7 +29,7 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
   await knex.schema.dropTable(PROFILE_TABLE);
-  await knex.schema.alterTable(ACCOUNT_TABLE, table => {
+  await knex.schema.alterTable(ACCOUNT_TABLE, (table) => {
     table.dropForeign('profile');
   });
 }

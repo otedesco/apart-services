@@ -13,7 +13,9 @@ export abstract class App {
   public app: Application;
 
   private env: string;
+
   private port: string | number;
+
   private logger: any;
 
   constructor(config: ConfigOptions) {
@@ -26,7 +28,7 @@ export abstract class App {
       .then(() => {
         this.logger.info('Connections initialized');
       })
-      .catch(err => {
+      .catch((err) => {
         this.logger.error('An Error has occured during connection init');
         throw err;
       });

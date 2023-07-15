@@ -12,6 +12,7 @@
       "persistent": true
     },
     "lint": {},
+    "lint:fix": {},
     "migrate": {},
     "rollback": {},
     "clean": {

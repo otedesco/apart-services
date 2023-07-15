@@ -22,11 +22,12 @@ function getAccessToken({ headers, cookies }: Request): string | null {
 
 function getRefreshTken({ cookies }: Request): string | null {
   const refreshToken = _.get(cookies, 'refresh_token');
+  
   return refreshToken;
 }
 
 async function getAccountFromDB(id: string) {
-  return await AccountService.findAccountById(id);
+  return AccountService.findAccountById(id);
 }
 
 export async function deserializeAccount(req: Request, res: Response, next: NextFunction) {
@@ -35,12 +36,14 @@ export async function deserializeAccount(req: Request, res: Response, next: Next
   const refreshToken = getRefreshTken(req);
   if (!accessToken && !refreshToken) {
     logger.error('No token found on request');
+    
     return next(new UnauthorizedException());
   }
 
   const publicKey = accessToken ? PUBLIC_KEY : refreshToken ? REFRESH_PUBLIC_KEY : null;
   if (!publicKey) {
     logger.error('No public key found');
+    
     return next(new UnauthorizedException());
   }
 
@@ -48,6 +51,7 @@ export async function deserializeAccount(req: Request, res: Response, next: Next
   logger.info(`JWT decoded sucessfully ${data}`);
   if (!data) {
     logger.error('Not found data on JWT');
+    
     return next(new UnauthorizedException());
   }
 
@@ -65,5 +69,6 @@ export async function deserializeAccount(req: Request, res: Response, next: Next
   logger.info(`Account deserialization successs AccountID: ${data.sub} `);
 
   res.locals.account = account;
+  
   return next();
 }

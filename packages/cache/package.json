@@ -11,7 +11,9 @@
   "scripts": {
     "build": "tsup src/index.ts --format cjs --dts",
     "dev": "npm run build -- --watch",
-    "clean": "rm -rf node_modules && rm -rf .turbo"
+    "clean": "rm -rf node_modules && rm -rf .turbo",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@types/lodash": "^4.14.195",
@@ -24,6 +26,7 @@
     "@types/node": "^20.4.1",
     "server-utils": "workspace:*",
     "tsconfig": "workspace:*",
-    "tsup": "^7.1.0"
+    "tsup": "^7.1.0",
+    "eslint-config-custom": "workspace:*"
   }
 }

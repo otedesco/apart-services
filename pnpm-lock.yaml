@@ -26,6 +26,9 @@ importers:
       prettier:
         specifier: ^2.5.1
         version: 2.8.8
+      tsconfig:
+        specifier: workspace:*
+        version: link:packages/tsconfig
       turbo:
         specifier: latest
         version: 1.10.7
@@ -51,6 +54,9 @@ importers:
       '@types/node':
         specifier: ^20.4.1
         version: 20.4.1
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../eslint-config-custom
       server-utils:
         specifier: workspace:*
         version: link:../server-utils
@@ -88,6 +94,9 @@ importers:
       '@types/node':
         specifier: ^20.4.1
         version: 20.4.1
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../eslint-config-custom
       tsconfig:
         specifier: workspace:*
         version: link:../tsconfig
@@ -103,15 +112,15 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^5.61.0
         version: 5.61.0(eslint@7.32.0)(typescript@5.1.6)
-      eslint-config-prettier:
-        specifier: ^8.8.0
-        version: 8.8.0(eslint@7.32.0)
+      eslint-config-airbnb-typescript:
+        specifier: ^17.1.0
+        version: 17.1.0(@typescript-eslint/eslint-plugin@5.61.0)(@typescript-eslint/parser@5.61.0)(eslint-plugin-import@2.27.5)(eslint@7.32.0)
       eslint-plugin-import:
         specifier: ^2.27.5
         version: 2.27.5(@typescript-eslint/parser@5.61.0)(eslint@7.32.0)
       eslint-plugin-prettier:
         specifier: ^4.2.1
-        version: 4.2.1(eslint-config-prettier@8.8.0)(eslint@7.32.0)(prettier@2.8.8)
+        version: 4.2.1(eslint@7.32.0)(prettier@2.8.8)
 
   packages/server-utils:
     dependencies:
@@ -170,6 +179,9 @@ importers:
       '@types/node':
         specifier: ^20.4.1
         version: 20.4.1
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../eslint-config-custom
       tsconfig:
         specifier: workspace:*
         version: link:../tsconfig
@@ -242,6 +254,9 @@ importers:
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-custom
       nodemon:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1743,6 +1758,10 @@ packages:
   /concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
+  /confusing-browser-globals@1.0.11:
+    resolution: {integrity: sha512-JsPKdmh8ZkmnHxDk55FZ1TqVLvEQTvoByJZRN9jzI0UjxK/QgAmsphz7PGtqgPieQZ/CQcHWXCR7ATDNhGe+YA==}
+    dev: false
+
   /constant-case@2.0.0:
     resolution: {integrity: sha512-eS0N9WwmjTqrOmR3o83F5vW8Z+9R1HnVz3xmzT2PMFug9ly+Au/fxRWlEBSb6LcZwspSsEn9Xs1uw9YgzAg1EQ==}
     dependencies:
@@ -2119,13 +2138,34 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /eslint-config-prettier@8.8.0(eslint@7.32.0):
-    resolution: {integrity: sha512-wLbQiFre3tdGgpDv67NQKnJuTlcUVYHas3k+DZCc2U2BadthoEY4B7hLPvAxaqdyOGCzuLfii2fqGph10va7oA==}
-    hasBin: true
+  /eslint-config-airbnb-base@15.0.0(eslint-plugin-import@2.27.5)(eslint@7.32.0):
+    resolution: {integrity: sha512-xaX3z4ZZIcFLvh2oUNvcX5oEofXda7giYmuplVxoOg5A7EXJMrUyqRgR+mhDhPK8LZ4PttFOBvCYDbX3sUoUig==}
+    engines: {node: ^10.12.0 || >=12.0.0}
     peerDependencies:
-      eslint: '>=7.0.0'
+      eslint: ^7.32.0 || ^8.2.0
+      eslint-plugin-import: ^2.25.2
     dependencies:
+      confusing-browser-globals: 1.0.11
       eslint: 7.32.0
+      eslint-plugin-import: 2.27.5(@typescript-eslint/parser@5.61.0)(eslint@7.32.0)
+      object.assign: 4.1.4
+      object.entries: 1.1.6
+      semver: 6.3.0
+    dev: false
+
+  /eslint-config-airbnb-typescript@17.1.0(@typescript-eslint/eslint-plugin@5.61.0)(@typescript-eslint/parser@5.61.0)(eslint-plugin-import@2.27.5)(eslint@7.32.0):
+    resolution: {integrity: sha512-GPxI5URre6dDpJ0CtcthSZVBAfI+Uw7un5OYNVxP2EYi3H81Jw701yFP7AU+/vCE7xBtFmjge7kfhhk4+RAiig==}
+    peerDependencies:
+      '@typescript-eslint/eslint-plugin': ^5.13.0 || ^6.0.0
+      '@typescript-eslint/parser': ^5.0.0 || ^6.0.0
+      eslint: ^7.32.0 || ^8.2.0
+      eslint-plugin-import: ^2.25.3
+    dependencies:
+      '@typescript-eslint/eslint-plugin': 5.61.0(@typescript-eslint/parser@5.61.0)(eslint@7.32.0)(typescript@5.1.6)
+      '@typescript-eslint/parser': 5.61.0(eslint@7.32.0)(typescript@5.1.6)
+      eslint: 7.32.0
+      eslint-config-airbnb-base: 15.0.0(eslint-plugin-import@2.27.5)(eslint@7.32.0)
+      eslint-plugin-import: 2.27.5(@typescript-eslint/parser@5.61.0)(eslint@7.32.0)
     dev: false
 
   /eslint-import-resolver-node@0.3.7:
@@ -2200,7 +2240,7 @@ packages:
       - supports-color
     dev: false
 
-  /eslint-plugin-prettier@4.2.1(eslint-config-prettier@8.8.0)(eslint@7.32.0)(prettier@2.8.8):
+  /eslint-plugin-prettier@4.2.1(eslint@7.32.0)(prettier@2.8.8):
     resolution: {integrity: sha512-f/0rXLXUt0oFYs8ra4w49wYZBG5GKZpAYsJSm6rnYL5uVDjd+zowwMwVZHnAjf4edNrKpCDYfXDgmRE/Ak7QyQ==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
@@ -2212,7 +2252,6 @@ packages:
         optional: true
     dependencies:
       eslint: 7.32.0
-      eslint-config-prettier: 8.8.0(eslint@7.32.0)
       prettier: 2.8.8
       prettier-linter-helpers: 1.0.0
     dev: false
@@ -3698,6 +3737,15 @@ packages:
       define-properties: 1.2.0
       has-symbols: 1.0.3
       object-keys: 1.1.1
+    dev: false
+
+  /object.entries@1.1.6:
+    resolution: {integrity: sha512-leTPzo4Zvg3pmbQ3rDK69Rl8GQvIqMWubrkxONG9/ojtFE2rD9fjMKfSI5BxW3osRH1m6VdzmqK8oAY9aT4x5w==}
+    engines: {node: '>= 0.4'}
+    dependencies:
+      call-bind: 1.0.2
+      define-properties: 1.2.0
+      es-abstract: 1.21.2
     dev: false
 
   /object.values@1.1.6:

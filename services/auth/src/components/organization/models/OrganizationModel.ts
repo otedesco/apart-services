@@ -7,11 +7,13 @@ import { Organization } from '../interfaces/Organization';
 
 export class Organizations extends BaseModel implements Organization {
   id: string;
+
   name: string;
 
   collaborators?: Profile[];
 
   createdAt: Date;
+
   updatedAt: Date;
 
   static tableName = ORGANIZATION_TABLE;

@@ -24,7 +24,9 @@ class AuthServer extends App {
     Model.knex(knex);
     await testDBConnection().catch(logger.error);
     logger.info('Initializing cache connection');
-    await Cache.init({ socket: { host: CACHE_HOST, port: CACHE_PORT }, logger }).catch(logger.error);
+    await Cache.init(
+      { socket: { host: CACHE_HOST, port: CACHE_PORT }, logger },
+    ).catch(logger.error);
   }
 
   initializeErrorHandling(): void {

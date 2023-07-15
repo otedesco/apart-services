@@ -1,16 +1,16 @@
-import { promisifyAll } from 'bluebird';
+/* eslint-disable @typescript-eslint/naming-convention */
 import _isEmpty from 'lodash/isEmpty';
 import * as redis from 'redis';
-import { LoggerFactory } from 'server-utils';
-
-let client: redis.AsyncRedisClient;
+import type { LoggerFactory } from 'server-utils';
+export type Client = redis.RedisClientType;
+let client: redis.RedisClientType;
 let logger: LoggerFactory['logger'];
 let CONFIG: redis.RedisClientOptions;
 
 const _init = async (config: redis.RedisClientOptions) => {
   const connectingClient = redis.createClient(config);
   connectingClient.on('connect', () => {
-    client = promisifyAll(connectingClient) as unknown as redis.AsyncRedisClient;
+    client = connectingClient as redis.RedisClientType;
   });
 
   await connectingClient.connect();
@@ -64,13 +64,13 @@ const _set = async (key: string, value: any, expire = 300) => {
 //   return client.del(key);
 // };
 
-const timeoutChecker = (strategy: Promise<any>, timeoutMillis = 100) => {
+const timeoutChecker = async (strategy: Promise<any>, timeoutMillis = 100) => {
   const timeoutPromise = new Promise((_resolve, reject) => {
     setTimeout(() => {
       reject(new Error('Redis Timeout'));
     }, timeoutMillis);
   });
-
+  
   return Promise.race([strategy, timeoutPromise]);
 };
 
@@ -80,8 +80,10 @@ export interface Options extends redis.RedisClientOptions {
   logger: LoggerFactory['logger'];
 }
 
-export async function init({ logger, CONN_DELAY_MS = 200, CONN_TIMEOUT_MS = 30 * 100, ...redisConfig }: Options) {
-  logger = logger;
+export async function init({ 
+  logger: _logger, CONN_DELAY_MS = 200, CONN_TIMEOUT_MS = 30 * 100, ...redisConfig 
+}: Options) {
+  logger = _logger;
   logger.debug(`Starting Redis connection: ${JSON.stringify(redisConfig)}`);
   _init(redisConfig);
   CONFIG = redisConfig;
@@ -100,87 +102,88 @@ export async function init({ logger, CONN_DELAY_MS = 200, CONN_TIMEOUT_MS = 30 *
       throw new Error('Redis Connection Timeout');
     }
     const expDelay = i * CONN_DELAY_MS;
+    // eslint-disable-next-line @typescript-eslint/no-loop-func
     await new Promise(resolve => setTimeout(resolve, expDelay));
   }
 }
 
-function getClient(): redis.AsyncRedisClient {
-  let client = _getClient();
+function getClient(): redis.RedisClientType {
+  let _client = _getClient();
 
-  if (!client) {
+  if (!_client) {
     _init(CONFIG);
-    client = _getClient();
+    _client = _getClient();
   }
 
-  return client;
+  return _client;
 }
 
-async function get(key: string): Promise<string> {
-  const client = _getClient();
-
-  return timeoutChecker(client.getAsync(key));
+function get(key: string): Promise<string> {
+  const _client = getClient();
+  
+  return timeoutChecker(_client.get(key));
 }
 
 async function set<T>(key: string, value: T, expire = 180): Promise<void> {
   return timeoutChecker(_set(key, value, expire));
 }
 
-async function del(keys: string | string[], gotClient: redis.AsyncRedisClient | null = null) {
+async function del(keys: string | string[], gotClient: redis.RedisClientType | null = null) {
   if (_isEmpty(keys)) return;
 
-  const client = gotClient ? gotClient : _getClient();
+  const _client = gotClient ? gotClient : _getClient();
 
-  return client.delAsync(keys);
+  _client.del(keys);
 }
 
 async function flush() {
-  const client = _getClient();
+  const _client = _getClient();
 
-  return client.flushAllAsync();
+  return _client.flushAll();
 }
 
 async function addToSet(key: string, val: string, ttl = 180) {
   const setTTL = ttl * 1.5;
 
-  const client = _getClient();
+  const _client = _getClient();
 
-  return timeoutChecker(client.sAddAsync(key, val, setTTL));
+  return timeoutChecker(_client.sAdd(key, [val, 'EX', String(setTTL)]));
 }
 
 async function createSet(key: string, values: string | string[]) {
   if (!values.length) return 0;
 
-  const client = _getClient();
+  const _client = _getClient();
 
-  return timeoutChecker(client.sAddAsync(key, values));
+  return timeoutChecker(_client.sAdd(key, values));
 }
 async function popFromSet(key: string) {
-  const client = _getClient();
+  const _client = _getClient();
 
-  return timeoutChecker(client.sPopAsync(key));
+  return timeoutChecker(_client.sPop(key));
 }
 
 async function getSetMembers(key: string) {
-  const client = _getClient();
+  const _client = _getClient();
 
-  return timeoutChecker(client.sMembersAsync(key));
+  return timeoutChecker(_client.sMembers(key));
 }
 
 async function deleteMatching(pattern: string, cursor = 0, scanCount = 1000, deleteBatch = 100): Promise<void> {
   if (!pattern) return;
 
-  const client = _getClient();
+  const _client = _getClient();
   let keysToDelete: string[] = [];
 
-  const { cursor: nCursor, keys: matchingKeys } = await client.scanAsync(cursor, { MATCH: pattern, COUNT: scanCount });
+  const { cursor: nCursor, keys: matchingKeys } = await _client.scan(cursor, { MATCH: pattern, COUNT: scanCount });
   if (matchingKeys && matchingKeys.length) keysToDelete = [...keysToDelete, ...matchingKeys];
 
   if (keysToDelete.length > deleteBatch) {
-    await del(keysToDelete, client);
+    await del(keysToDelete, _client);
     keysToDelete = [];
   }
 
-  return +nCursor ? deleteMatching(pattern, nCursor) : del(keysToDelete, client);
+  return +nCursor ? deleteMatching(pattern, nCursor) : del(keysToDelete, _client);
 }
 
 export default {

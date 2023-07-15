@@ -40,14 +40,14 @@ export class LoggerFactory {
 
   private getLoggerFormats = (label: string) => {
     const formatLabel = winston.format.label({
-      label: label,
+      label,
     });
     const formatTimestamp = winston.format.timestamp({
       format: 'YYYY-MM-DD HH:mm:ss',
     });
-    const formatPrintf = winston.format.printf(({ level, message, label, timestamp, stack }) => {
-      return `${timestamp} ${level} [${label}] ${message} ${stack ? stack : ''}`;
-    });
+    const formatPrintf = winston.format.printf(({
+      level, message, label: _label, timestamp, stack,
+    }) => `${timestamp} ${level} [${_label}] ${message} ${stack || ''}`);
 
     return winston.format.combine(formatLabel, formatTimestamp, formatPrintf);
   };
@@ -56,8 +56,8 @@ export class LoggerFactory {
     const debugTransport = new winstonDaily({
       level: 'debug',
       datePattern: 'YYYY-MM-DD',
-      dirname: logsDirectory + '/debug',
-      filename: `%DATE%.log`,
+      dirname: `${logsDirectory}/debug`,
+      filename: '%DATE%.log',
       maxFiles: 30,
       json: false,
       zippedArchive: true,
@@ -65,13 +65,14 @@ export class LoggerFactory {
     const errorTransport = new winstonDaily({
       level: 'error',
       datePattern: 'YYYY-MM-DD',
-      dirname: logsDirectory + '/error',
-      filename: `%DATE%.log`,
+      dirname: `${logsDirectory}/error`,
+      filename: '%DATE%.log',
       maxFiles: 30,
       handleExceptions: true,
       json: false,
       zippedArchive: true,
     });
+
     return { debugTransport, errorTransport };
   };
 }

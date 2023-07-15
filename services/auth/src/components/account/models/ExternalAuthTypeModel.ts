@@ -7,6 +7,7 @@ import { modelSchema } from '../schemas/ExternalAuthType';
 
 export class ExternalAuthTypes extends BaseModel implements ExternalAuthType {
   id!: number;
+
   type: ExternalAuthTypeEnum;
 
   static get tableName() {

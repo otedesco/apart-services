@@ -8,9 +8,11 @@ import { Accounts } from './AccountModel';
 
 export class Sessions extends BaseModel implements Session {
   id!: string;
+
   account?: Account['id'] | Account;
 
   createdAt: Date;
+
   updatedAt: Date;
 
   static tableName = ACCOUNT_TABLE;

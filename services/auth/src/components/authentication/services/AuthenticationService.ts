@@ -1,5 +1,6 @@
 import { sign, verify } from 'commons';
 import _ from 'lodash';
+import { Transaction } from 'objection';
 
 import {
   REFRESH_PUBLIC_KEY,
@@ -9,7 +10,7 @@ import {
   TOKEN_EXPIRE,
 } from '../../../configs/AppConfig';
 import { UnauthorizedException } from '../../../exceptions/UnauthorizedException';
-import { Transaction } from '../../../utils/Transaction';
+import { Transaction as Transactional } from '../../../utils/Transaction';
 import { Account, SecuredAccount } from '../../account/interfaces/Account';
 import AccountService from '../../account/services/AccountService';
 import ProfileService from '../../profile/services/ProfileService';
@@ -27,19 +28,20 @@ function transactionalCreate(payload: SignUp, returning = false) {
   };
 }
 
-function signSession(account: SecuredAccount): { accessToken: string; refreshToken: string } {
+function signSession(account: SecuredAccount): { accessToken: string | null; refreshToken: string | null } {
   const payload = { sub: account.id };
-  const accessToken = sign(payload, SECRET_KEY, { expiresIn: `${TOKEN_EXPIRE}s` });
-  const refreshToken = sign(payload, REFRESH_SECRET_KEY, { expiresIn: `${SESSION_EXPIRE}s` });
-
-  return { accessToken, refreshToken };
+  
+  return { 
+    accessToken: sign(payload, SECRET_KEY, { expiresIn: `${TOKEN_EXPIRE}s` }), 
+    refreshToken: sign(payload, REFRESH_SECRET_KEY, { expiresIn: `${SESSION_EXPIRE}s` }), 
+  };
 }
 
 async function signUp(payload: SignUp): Promise<Account> {
-  return await Transaction.run(transactionalCreate(payload));
+  return Transactional.run(transactionalCreate(payload));
 }
 
-async function signIn(payload: SignIn): Promise<{ accessToken: string; refreshToken: string }> {
+async function signIn(payload: SignIn): Promise<{ accessToken: string | null; refreshToken: string | null }> {
   const account = await AccountService.verifyAccount(payload);
   const result = signSession(account);
 
@@ -50,10 +52,10 @@ async function signIn(payload: SignIn): Promise<{ accessToken: string; refreshTo
   return result;
 }
 
-async function refreshToken(refreshToken: string): Promise<{ accessToken: string; refreshToken: string }> {
+async function refreshToken(token: string): Promise<{ accessToken: string | null; refreshToken: string | null }> {
   if (!refreshToken) throw new UnauthorizedException();
 
-  const decoded = verify<{ sub: string }>(refreshToken, REFRESH_PUBLIC_KEY);
+  const decoded = verify<{ sub: string }>(token, REFRESH_PUBLIC_KEY);
   if (!decoded) throw new UnauthorizedException();
 
   // TODO: THIS SHOULD BE FETCHED FROM REDIS

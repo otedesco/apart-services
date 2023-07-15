@@ -2,8 +2,11 @@ import { ForbidenError, CustomError } from 'commons';
 
 export class ForbidenException extends Error implements CustomError {
   public status: number;
+
   public code: string;
+
   public message: string;
+
   public data: Object | null;
 
   constructor(properties?: { status: 401; code: string; data: Object }) {

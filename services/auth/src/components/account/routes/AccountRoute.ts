@@ -9,6 +9,7 @@ import { create } from '../validators/AccountValidator';
 
 export class AccountRoute implements Route {
   public path = '/account';
+
   public router: Router;
 
   constructor() {

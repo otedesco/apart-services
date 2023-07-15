@@ -1,3 +1,5 @@
+import { Transaction } from 'objection';
+
 import { ProfileTypeEnum } from '../../../enums/ProfileTypesEnum';
 import { RoleTypeEnum } from '../../../enums/RoleTypeEnum';
 import { Profile } from '../interfaces/Profile';
@@ -14,8 +16,8 @@ function mapProfile({ account, name, lastName, avatarUrl, role, type }: Partial<
   };
 }
 
-async function create(profile: Partial<Profile>, tx = null): Promise<Profile> {
-  return await ProfileRepository.create(mapProfile(profile), tx);
+async function create(profile: Partial<Profile>, tx?: Transaction): Promise<Profile> {
+  return ProfileRepository.create(mapProfile(profile), tx);
 }
 
 export default { create };

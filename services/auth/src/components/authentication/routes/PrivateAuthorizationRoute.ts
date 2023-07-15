@@ -7,6 +7,7 @@ import AuthenticationController from '../controllers/AuthenticationController';
 
 export class PrivateAuthenticationRoute implements Route {
   public path: string;
+
   public router: Router;
 
   constructor() {

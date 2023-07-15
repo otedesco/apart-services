@@ -9,6 +9,7 @@ export const isPrivate = (_req: Request, res: Response, next: NextFunction) => {
     const account = res.locals.account;
     if (!account) {
       logger.error('No account found');
+      
       return next(new UnauthorizedException());
     }
 

@@ -11,8 +11,8 @@
     "start": "node dist/index.js",
     "dev": "cross-env NODE_ENV=development nodemon",
     "build:tsc": "tsc && tsc-alias",
-    "lint": "eslint --ext .ts src/",
-    "lint:fix": "npm run lint -- --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "seed": "knex seed:run --knexfile=knexfile.ts --verbose",
     "migrate": "knex migrate:latest --knexfile=knexfile.ts --verbose",
     "rollback": "knex migrate:rollback --knexfile=knexfile.ts --verbose",
@@ -30,7 +30,8 @@
     "nodemon": "^3.0.0",
     "ts-node": "^10.9.1",
     "tsc-alias": "^1.8.7",
-    "tsconfig": "workspace:*"
+    "tsconfig": "workspace:*",
+    "eslint-config-custom": "workspace:*"
   },
   "dependencies": {
     "ajv": "^8.12.0",

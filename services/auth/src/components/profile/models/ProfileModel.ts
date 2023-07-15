@@ -14,16 +14,23 @@ import { RoleTypes } from './RoleTypeModel';
 
 export default class Profiles extends BaseModel implements Profile {
   id!: string;
+
   name: string;
+
   lastName: string;
+
   avatarUrl?: string;
 
   role: RoleType['role'] | RoleType;
+
   type: ProfileType['type'] | ProfileType;
+
   organization?: Organization['id'] | Organization;
+
   account: Account['id'] | Account;
 
   createdAt: Date;
+
   updatedAt: Date;
 
   static tableName: string = PROFILE_TABLE;

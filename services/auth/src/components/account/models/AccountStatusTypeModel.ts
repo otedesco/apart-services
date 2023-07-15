@@ -7,6 +7,7 @@ import { modelSchema } from '../schemas/AccountStatusType';
 
 export class AccountStatusTypes extends BaseModel implements AccountStatusType {
   id!: number;
+
   status: AccountStatusEnum;
 
   static get tableName() {

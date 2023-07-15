@@ -5,6 +5,7 @@ import { RoleType } from '../interfaces/RoleType';
 
 export class RoleTypes extends BaseModel implements RoleType {
   id!: number;
+
   role: RoleType['role'];
 
   static get tableName() {

@@ -13,6 +13,8 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
     "moduleResolution": "node",
     "module": "commonjs",
     "pretty": true,

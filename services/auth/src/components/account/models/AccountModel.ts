@@ -16,16 +16,25 @@ import { Sessions } from './SessionsModel';
 
 export class Accounts extends BaseModel implements Account {
   id!: string;
+
   email: string;
+
   password: string;
+
   salt: string;
+
   externalAuthType?: ExternalAuthTypeEnum | ExternalAuthType;
+
   externalId?: string;
+
   status: AccountStatusEnum | AccountStatusType;
+
   sessions?: Session['id'][] | Session[];
+
   profiles?: Profile['id'][] | Profile[];
 
   createdAt: string;
+
   updatedAt: string;
 
   static tableName = ACCOUNT_TABLE;

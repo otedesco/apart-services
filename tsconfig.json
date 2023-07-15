@@ -4,7 +4,9 @@
     "baseUrl": "src"
   },
   "include": [
-    "./"
+    "./",
+    "services/**/*.{ts,js}",
+    "packages/**/*.{ts,js}",
   ],
   "exclude": [
     "node_modules",

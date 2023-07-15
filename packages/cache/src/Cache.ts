@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import _isEmpty from 'lodash/isEmpty';
-import { LoggerFactory } from 'server-utils';
+import type { LoggerFactory } from 'server-utils';
 
-import Redis, { Options as RedisOptions } from './Redis';
+import Redis, {  Options as RedisOptions } from './Redis';
 
 export type Options = RedisOptions;
 let logger: LoggerFactory['logger'];
@@ -20,12 +21,11 @@ const _rememberValue = async <Args, Result>(
   resolver: Resolver<Args, Result>,
   argsObject: Args,
 ) => {
-  try {
-    const cachedValue = await Redis.get(key);
-    if (cachedValue) return JSON.parse(cachedValue);
-  } catch (err) {
+
+  const cachedValue = await Redis.get(key).catch((err) => {
     logger.warn(`Unable to get value for key ${key} err: ${err}`);
-  }
+  });
+  if (cachedValue) return JSON.parse(cachedValue);
 
   const resolvedValue = await resolver(argsObject);
 
@@ -63,11 +63,8 @@ const _forgetSetValues = async (key: string) => {
 
 function init(conf: Options) {
   logger = conf.logger;
+  
   return Redis.init(conf);
-}
-
-function getRedis() {
-  return Redis;
 }
 
 function deleteMatching(pattern: string) {
@@ -77,8 +74,8 @@ function deleteMatching(pattern: string) {
 async function remember<Args, Result>(
   idKey: string,
   key: string,
-  expire = 180,
-  enabled = false,
+  expire: number,
+  enabled: boolean,
   resolver: Resolver<Args, Result>,
   argsObject: Args,
 ) {
@@ -88,8 +85,8 @@ async function remember<Args, Result>(
 async function rememberSearch<Args, Result>(
   searchKey: string,
   key: string,
-  expire = 180,
-  enabled = false,
+  expire: number,
+  enabled: boolean,
   resolver: Resolver<Args, Result>,
   argsObject: Args,
 ) {
@@ -99,7 +96,7 @@ async function rememberSearch<Args, Result>(
 async function forgetSearch<Args, Result>(
   searchKey: string,
   rootKey: string | string[],
-  enabled = false,
+  enabled: boolean,
   resolver: Resolver<Args, Result>,
   argsObject: Args,
 ) {
@@ -115,7 +112,7 @@ async function forgetAll<Args, Result>(
   idKey: string,
   // searchKey: string,
   rootKey: string | string,
-  enabled = false,
+  enabled: boolean,
   resolver: Resolver<Args, Result>,
   argsObject: Args,
 ) {
@@ -130,4 +127,4 @@ async function forgetAll<Args, Result>(
 
 const flush = Redis.flush;
 
-export default { init, getRedis, flush, deleteMatching, remember, rememberSearch, forgetAll, forgetSearch };
+export default { init, flush, deleteMatching, remember, rememberSearch, forgetAll, forgetSearch };

@@ -1,5 +1,13 @@
 {
   "extends": "tsconfig/node-lib.json",
-  "exclude": ["**/*.test.ts"],
-  "include": ["src"]
+  "exclude": [
+    "**/*.test.ts",
+    "node_modules",
+    ".env",
+    "dist",
+    ".turbo"
+  ],
+  "include": [
+    "./"
+  ],
 }

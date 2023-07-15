@@ -3,6 +3,7 @@ import { DBErrors } from 'objection-db-errors';
 
 export abstract class BaseModel extends DBErrors(Model) {
   created_at!: string;
+
   updated_at?: string;
 
   static idColumn = 'id';

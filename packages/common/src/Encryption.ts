@@ -3,7 +3,9 @@ import { genSalt, hash, compare } from 'bcryptjs';
 import { BaseException, EncryptionError } from './errors';
 
 function buildBaseError(code: string, message: string, data = {}): BaseException {
-  return new BaseException({ status: 400, code, message, data });
+  return new BaseException({
+    status: 400, code, message, data,
+  });
 }
 
 function validateResult<T>(result: T): void {
@@ -20,7 +22,7 @@ async function encryptionHandler<T>(promise: Promise<T>): Promise<T> {
 }
 
 export async function generateSalt(saltRounds: number) {
-  return await encryptionHandler(genSalt(saltRounds));
+  return encryptionHandler(genSalt(saltRounds));
 }
 
 export async function generateHash(
@@ -38,5 +40,5 @@ export async function generateHash(
 }
 
 export async function compareWithHash(plainTextData: string, hashedData: string) {
-  return await encryptionHandler(compare(plainTextData, hashedData));
+  return encryptionHandler(compare(plainTextData, hashedData));
 }
