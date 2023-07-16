@@ -1,5 +1,6 @@
 import { ExternalAuthTypeEnum } from '../../../enums/ExternalAuthTypeEnum';
 
+// TODO: fix password and email formats, they are too simple
 export const signUpSchema = {
   type: 'object',
   additionalProperties: false,

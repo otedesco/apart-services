@@ -10,7 +10,9 @@ export function sign(payload: Object, secretKey: string, options?: SignOptions):
   }
 }
 
-export function verify<T>(token: string, publicKey: string): T | null {
+export function verify<T>(token: string | null, publicKey: string): T | null {
+  if (!token) return null;
+  
   try {
     const key = Buffer.from(publicKey, 'base64').toString('ascii');
 

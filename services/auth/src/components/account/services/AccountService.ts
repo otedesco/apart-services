@@ -9,18 +9,21 @@ import { UnauthorizedException } from '../../../exceptions/UnauthorizedException
 import { ValidationException } from '../../../exceptions/ValidationException';
 import { notify } from '../../../utils/Notifier';
 import { Account, SecuredAccount } from '../interfaces/Account';
-import AccountRepository from '../repositories/AccountRepository';
 import CachedAccountRepository from '../repositories/CachedAccountRepository';
 
-function clean(account: Account): SecuredAccount {
-  return _.omit(account, ['password', 'salt']);
+
+async function sanitize(handler: Promise<Account>): Promise<SecuredAccount> {
+  const keysToOmit = ['password', 'salt'];
+  const account = await handler;
+  
+  return _.omit(account, keysToOmit) as SecuredAccount;
 }
 
-async function validateAccount({ email, externalAuthType, externalId, password }: Account): Promise<void> {
+async function validateAccount({ email, externalAuthType, externalId, password }: Partial<Account>): Promise<void> {
   if (!externalAuthType && !password) throw new ValidationException({ status: 400 });
   if (externalAuthType && !externalId) throw new ValidationException({ status: 400 });
 
-  const account = await AccountRepository.findByEmail(email);
+  const account = await CachedAccountRepository.findOne({ email });
   if (account) throw new ValidationException({ status: 400 });
 }
 
@@ -39,32 +42,33 @@ async function mapAccountData(account: Account): Promise<Account> {
   return accountData;
 }
 
+async function findOne(account: Partial<Account | SecuredAccount | null>): Promise<SecuredAccount | null> {
+  if (!account) return null;
+  
+  return sanitize(CachedAccountRepository.findOne(account));
+}
+
 async function create(payload: Account, tx?: Transaction): Promise<SecuredAccount> {
   await validateAccount(payload);
   const accountData = await mapAccountData(payload);
-  const account = await AccountRepository.create(accountData, tx);
-  const cleanedAccount = clean(account);
+  const account = await sanitize(CachedAccountRepository.create(accountData, tx));
 
-  if (payload) notify(ACCOUNT_TOPIC, CREATED_EVENTS_SUFIX, cleanedAccount);
+  if (account) notify(ACCOUNT_TOPIC, CREATED_EVENTS_SUFIX, account);
 
-  return cleanedAccount;
+  return account;
 }
 
-async function verifyAccount({ email, password }: Pick<Account, 'email' | 'password'>): Promise<SecuredAccount> {
+async function verifyAccount({ email, password }: Partial<Account>): Promise<SecuredAccount> {
   const account = await CachedAccountRepository.findOne({ email });
   if (!account) throw new UnauthorizedException();
 
-  const isValid = await compareWithHash(password, account.password);
-  if (isValid) return clean(account);
-
-  throw new UnauthorizedException();
-}
-
-async function findAccountById(id: string): Promise<SecuredAccount | null> {
-  const account = await AccountRepository.findById(id);
-  if (!account) return null;
+  if (password) {
+    const isValid = await compareWithHash(password, account.password);
+    if (!isValid) throw new UnauthorizedException();
+  }
   
-  return clean(account);
+  
+  return sanitize(account);
 }
 
-export default { create, verifyAccount, findAccountById };
+export default { create, verifyAccount, findOne };
