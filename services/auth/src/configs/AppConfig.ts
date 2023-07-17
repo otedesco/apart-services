@@ -18,6 +18,7 @@ export const REFRESH_SECRET_KEY = environment.REFRESH_SECRET_KEY || 'super-secre
 export const REFRESH_PUBLIC_KEY = environment.REFRESH_PUBLIC_KEY || 'not-so-secret-key';
 export const TOKEN_EXPIRE = 7 * 24 * 60 * 60;
 export const SESSION_EXPIRE = 15 * 24 * 60 * 60;
+export const PREFIX = environment.PREFIX || 'authorization-service';
 
 export const ACCESS_TOKEN_COOKIE_OPTIONS = {
   expires: new Date(Date.now() + TOKEN_EXPIRE * 100),
@@ -33,12 +34,10 @@ export const REFRESH_TOKEN_COOKIE_OPTIONS = {
   maxAge: SESSION_EXPIRE * 100,
 };
 
-export const SALT_ROUNDS = +environment.SALT_ROUNDS || 10;
+export const SALT_ROUNDS = Number(environment.SALT_ROUNDS) || 10;
 
-export const PROMISE_CONCURRENCY = +environment.PROMISE_CONCURRENCY ?? 10;
+export const PROMISE_CONCURRENCY = Number(environment.PROMISE_CONCURRENCY) || 10;
 
 export const REQUESTER = {
-  userId: APP_NAME,
-  applicationId: APP_NAME,
-  userName: APP_NAME,
+  applicationId: `apart-cluster-${APP_NAME}`,
 };

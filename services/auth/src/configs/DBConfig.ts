@@ -5,9 +5,9 @@ const environment = process.env;
 
 // DB CONFIG
 export const CONNECTION = environment.PG_CONNECTION || 'postgres://apart:secret@127.0.0.1:5432/auth';
-export const TIMEOUT = +environment.DB_TIMEOUT || 200;
-export const CONNECTION_KEEP_ALIVE_TIMEOUT = +environment.CONNECTION_KEEP_ALIVE_TIMEOUT || 60000;
-export const CONNECTION_POOL_SIZE = +environment.DB_CONNECTION_POOL_SIZE || 20;
+export const TIMEOUT = Number(environment.DB_TIMEOUT) || 200;
+export const CONNECTION_KEEP_ALIVE_TIMEOUT = Number(environment.CONNECTION_KEEP_ALIVE_TIMEOUT) || 60000;
+export const CONNECTION_POOL_SIZE = Number(environment.DB_CONNECTION_POOL_SIZE) || 20;
 export const DEBUG = environment.DB_DEBUG === 'true' || false;
 
 // TABLE NAMES

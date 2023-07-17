@@ -38,9 +38,6 @@ importers:
       '@types/lodash':
         specifier: ^4.14.195
         version: 4.14.195
-      bluebird:
-        specifier: ^3.7.2
-        version: 3.7.2
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -48,9 +45,6 @@ importers:
         specifier: ^4.6.7
         version: 4.6.7
     devDependencies:
-      '@types/bluebird':
-        specifier: ^3.5.38
-        version: 3.5.38
       '@types/node':
         specifier: ^20.4.1
         version: 20.4.1
@@ -121,6 +115,37 @@ importers:
       eslint-plugin-prettier:
         specifier: ^4.2.1
         version: 4.2.1(eslint@7.32.0)(prettier@2.8.8)
+
+  packages/notifier:
+    dependencies:
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
+      node-rdkafka:
+        specifier: ^2.16.1
+        version: 2.16.1
+      redis:
+        specifier: ^4.6.7
+        version: 4.6.7
+    devDependencies:
+      '@types/lodash':
+        specifier: ^4.14.195
+        version: 4.14.195
+      '@types/node':
+        specifier: ^20.4.1
+        version: 20.4.1
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../eslint-config-custom
+      server-utils:
+        specifier: workspace:*
+        version: link:../server-utils
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      tsup:
+        specifier: ^7.1.0
+        version: 7.1.0(typescript@5.1.6)
 
   packages/server-utils:
     dependencies:
@@ -223,6 +248,9 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
+      notifier:
+        specifier: workspace:*
+        version: link:../../packages/notifier
       objection:
         specifier: ^3.0.4
         version: 3.0.4(knex@2.5.0)
@@ -868,10 +896,6 @@ packages:
     resolution: {integrity: sha512-LiMQ6EOPob/4yUL66SZzu6Yh77cbzJFYll+ZfaPiPPFswtIlA/Fs1MzdKYA7JApHU49zQTbJGX3PDmCpIdDBRQ==}
     dev: true
 
-  /@types/bluebird@3.5.38:
-    resolution: {integrity: sha512-yR/Kxc0dd4FfwtEoLZMoqJbM/VE/W7hXn/MIjb+axcwag0iFmSPK7OBUZq1YWLynJUoWQkfUrI7T0HDqGApNSg==}
-    dev: true
-
   /@types/body-parser@1.19.2:
     resolution: {integrity: sha512-ALYone6pm6QmwZoAgeyNksccT9Q4AWZQ6PvfwR37GT6r6FWUPguq6sUmNGSMV2Wr761oQoBxwGGa6DR5o1DC9g==}
     dependencies:
@@ -1419,6 +1443,12 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /bindings@1.5.0:
+    resolution: {integrity: sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==}
+    dependencies:
+      file-uri-to-path: 1.0.0
+    dev: false
+
   /bl@4.1.0:
     resolution: {integrity: sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==}
     dependencies:
@@ -1426,10 +1456,6 @@ packages:
       inherits: 2.0.4
       readable-stream: 3.6.2
     dev: true
-
-  /bluebird@3.7.2:
-    resolution: {integrity: sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==}
-    dev: false
 
   /body-parser@1.20.1:
     resolution: {integrity: sha512-jWi7abTbYwajOytWCQc37VulmWiRae5RyTpaCyDcS5/lMdtwSz5lOpDE67srw/HYe35f1z3fDQw+3txg7gNtWw==}
@@ -2556,6 +2582,10 @@ packages:
       token-types: 5.0.1
     dev: true
 
+  /file-uri-to-path@1.0.0:
+    resolution: {integrity: sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==}
+    dev: false
+
   /filename-reserved-regex@3.0.0:
     resolution: {integrity: sha512-hn4cQfU6GOT/7cFHXBqeBg2TbrMBgdD0kcjLhvSQYYwm3s4B6cjvBfb7nBALJLAXqmU5xajSa7X2NnUud/VCdw==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
@@ -3618,6 +3648,10 @@ packages:
       thenify-all: 1.6.0
     dev: true
 
+  /nan@2.17.0:
+    resolution: {integrity: sha512-2ZTgtl0nJsO0KQCjEpxcIr5D+Yv90plTitZt9JBfQvVJDS5seMl3FOvsh3+9CoYWXf/1l5OaZzzF6nDm4cagaQ==}
+    dev: false
+
   /natural-compare-lite@1.4.0:
     resolution: {integrity: sha512-Tj+HTDSJJKaZnfiuw+iaF9skdPpTo2GtEly5JHnWV/hfv2Qj/9RKsGISQtLh2ox3l5EAGw487hnBee0sIJ6v2g==}
     dev: false
@@ -3656,6 +3690,15 @@ packages:
       mkdirp: 0.5.6
       resolve: 1.22.2
     dev: true
+
+  /node-rdkafka@2.16.1:
+    resolution: {integrity: sha512-fiZJGl/w9QnACLhfVTYuS4V4WxSmVSbxhXyxL+B0SgRWEa8kA1NpdiB+gHPG71C3CqjbvYEfTJWhjd/1y0OeSA==}
+    engines: {node: '>=6.0.0'}
+    requiresBuild: true
+    dependencies:
+      bindings: 1.5.0
+      nan: 2.17.0
+    dev: false
 
   /nodemon@3.0.0:
     resolution: {integrity: sha512-yU9NSp3n+DUSt3S2LmtXss+4kOsmC8ZLpXeGe5mKuLdqkoSRwmaplk2lo5cmve7TPw5MgMcd2cazL0KpUscoSQ==}

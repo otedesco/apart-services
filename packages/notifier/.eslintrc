@@ -1,0 +1,15 @@
+{
+  "root": true,
+  "extends": [
+    "eslint-config-custom"
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "sourceType": "module"
+  },
+  "rules": {
+    "@typescript-eslint/naming-convention": [
+      "warn"
+    ]
+  }
+}

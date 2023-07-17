@@ -1,13 +1,13 @@
 import { generateHash, compareWithHash } from 'commons';
 import _ from 'lodash';
+// import { notifyAsync } from 'notifier';
 import { Transaction } from 'objection';
 
-import { SALT_ROUNDS } from '../../../configs/AppConfig';
-import { ACCOUNT_TOPIC, CREATED_EVENTS_SUFIX } from '../../../configs/KafkaConfig';
+import {  SALT_ROUNDS } from '../../../configs/AppConfig';
+// import { ACCOUNT_TOPIC, CREATED_EVENTS_SUFIX } from '../../../configs/KafkaConfig';
 import { AccountStatusEnum } from '../../../enums/AccountStatusEnum';
 import { UnauthorizedException } from '../../../exceptions/UnauthorizedException';
 import { ValidationException } from '../../../exceptions/ValidationException';
-import { notify } from '../../../utils/Notifier';
 import { Account, SecuredAccount } from '../interfaces/Account';
 import CachedAccountRepository from '../repositories/CachedAccountRepository';
 
@@ -53,7 +53,7 @@ async function create(payload: Account, tx?: Transaction): Promise<SecuredAccoun
   const accountData = await mapAccountData(payload);
   const account = await sanitize(CachedAccountRepository.create(accountData, tx));
 
-  if (account) notify(ACCOUNT_TOPIC, CREATED_EVENTS_SUFIX, account);
+  // if (account) notifyAsync(ACCOUNT_TOPIC, CREATED_EVENTS_SUFIX, account, REQUESTER);
 
   return account;
 }

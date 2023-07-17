@@ -22,7 +22,7 @@ const checkClient = () => {
   if (!client) {
     const ERR_MSG = 'client not initialized';
     logger.error(ERR_MSG);
-
+    
     throw new Error(ERR_MSG);
   }
 };

@@ -1,17 +1,18 @@
 import { Cache } from 'cache';
+import { Producer } from 'notifier';
 import { Model } from 'objection';
 import { App, ConfigOptions, LoggerFactory } from 'server-utils';
 
-import { AccountRoute } from './components/account/routes';
 import { AuthenticationRoute, PrivateAuthenticationRoute } from './components/authentication/routes';
 import { CACHE_HOST, CACHE_PORT } from './configs/CacheConfig';
+import { producerConfig } from './configs/KafkaConfig';
 import knex, { testDBConnection } from './database';
 import { handleError, logError } from './middlewares';
 import validateEnv from './utils/validateEnv';
 
 const { logger } = LoggerFactory.getInstance(__filename);
 
-const V1Routes = [new AuthenticationRoute(), new PrivateAuthenticationRoute(), new AccountRoute()];
+const V1Routes = [new AuthenticationRoute(), new PrivateAuthenticationRoute()];
 
 const serverConfig: ConfigOptions = {
   routes: [{ version: '/v1', routes: V1Routes }],
@@ -27,6 +28,9 @@ class AuthServer extends App {
     await Cache.init(
       { socket: { host: CACHE_HOST, port: CACHE_PORT }, logger },
     ).catch(logger.error);
+
+    logger.info('Initializing Kafka connection');
+    Producer.start({ ...producerConfig, logger });
   }
 
   initializeErrorHandling(): void {
