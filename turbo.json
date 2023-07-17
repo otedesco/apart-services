@@ -13,7 +13,9 @@
     },
     "lint": {},
     "lint:fix": {},
-    "migrate": {},
+    "migrate": {
+        "cache": false
+    },
     "rollback": {},
     "clean": {
       "cache": false

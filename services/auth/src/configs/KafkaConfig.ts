@@ -28,6 +28,10 @@ const clientConfig = {
   'queue.buffering.max.ms': KAFKA_BUFFERING_MAX_MS,
 };
 
+const CREATED = 'added';
+const UPDATED = 'updated';
+const DELETED = 'deleted';
+
 // PRODUCER CONFIGS
 export const TOPIC_PREFIX = environment.KAFKA_TOPIC_PREFIX || `apart-${PREFIX}`;
 export const PRODUCER_POLL_INTERVAL = Number(environment.PRODUCER_POLL_INTERVAL) || 100;
@@ -38,4 +42,15 @@ export const producerConfig: Producer.ProducerConfig = {
   producerPollInterval: PRODUCER_POLL_INTERVAL,
   dr_cb: Boolean(KAFKA_ENABLE_DELIVERY_REPORT) || true,
   ...clientConfig,
+};
+
+const events = {
+  ACCOUNT: 'account',
+};
+
+export const AccountConfig = {
+  topic: events.ACCOUNT,
+  updatedEvent: `${events.ACCOUNT}_${UPDATED}`,
+  createdEvent: `${events.ACCOUNT}_${CREATED}`,
+  deletedEvent: `${events.ACCOUNT}_${DELETED}`,
 };

@@ -69,15 +69,14 @@ const retryProduce = (newTopic: string, bufferedMessage: Buffer) => {
 };
 
 export async function sendMessage(topic: string, message: any): Promise<void> {
-  const prefix = process.env.KAFKA_TOPIC_PREFIX;
-  if (!prefix) throw new Error('KAFKA_TOPIC_PREFIX env variable is not set');
+  if (!producerConfig.prefix) throw new Error('prefix variable is not configured');
 
   const messageParsed = typeof message === 'object'
     ? JSON.stringify(message)
     : message.toString();
 
   const bufferedMessage = Buffer.from(messageParsed);
-  const newTopic = `${prefix}_${topic}`;
+  const newTopic = `${producerConfig.prefix}_${topic}`;
 
   producerConfig.logger?.debug(`New message for topic: ${newTopic}, message: ${bufferedMessage}`);
 

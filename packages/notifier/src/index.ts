@@ -2,10 +2,8 @@ import _ from 'lodash';
 
 import { sendMessage } from './providers/Kafka/Producer';
 
-export type Requester = {};
-
 export interface CallBack<T> {
-  (msg: T, req: Requester): void
+  (msg: T): void
 }
 
 export type Event = {};
@@ -14,12 +12,11 @@ interface Strategy {
   (topic: string, evt: Event): Promise<any>
 }
 
-function buildEvent<T>(topic: string, suffix: string, message: T, requester: Requester) {
+function buildEvent<T>(topic: string, suffix: string, message: T) {
   return { 
     name: `${topic}${suffix}`,
     timestamp: Date.now(),
     payload: message,
-    requester, 
   };
 }
 
@@ -30,13 +27,13 @@ function validateRequiredParams(topic: string, suffix: string) {
 }
 
 async function notify<T>(
-  topic: string, suffix: string, message: T, requester: Requester, strategy: Strategy, callBack?: CallBack<T>,
+  topic: string, suffix: string, message: T, strategy: Strategy, callBack?: CallBack<T>,
 ): Promise<boolean> {
   validateRequiredParams(topic, suffix);
 
   if (!_.isEmpty(message)) {
-    await strategy(topic, buildEvent(topic, suffix, message, requester));
-    if (callBack && typeof callBack === 'function') callBack(message, requester);
+    await strategy(topic, buildEvent(topic, suffix, message));
+    if (callBack && typeof callBack === 'function') callBack(message);
 
     return true;
   }
@@ -45,17 +42,17 @@ async function notify<T>(
 }
 
 export function notifySync<T>(
-  topic: string, suffix: string, message: T, requester: Requester, callBack?: CallBack<T>) {
+  topic: string, suffix: string, message: T, callBack?: CallBack<T>) {
   return notify(
-    topic, suffix, message, requester, async () => {}, callBack,
+    topic, suffix, message, async () => {}, callBack,
   );
 }
 
 
 
 export async function notifyAsync<T>(
-  topic: string, suffix: string, message: T, requester: Requester, callBack?: CallBack<T>) {
-  const sent = await notify(topic, suffix, message, requester,  sendMessage, callBack);
+  topic: string, suffix: string, message: T, callBack?: CallBack<T>) {
+  const sent = await notify(topic, suffix, message, sendMessage, callBack);
 
   if (sent) {
     // Implement some monitoring here

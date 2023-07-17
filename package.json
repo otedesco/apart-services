@@ -10,6 +10,7 @@
     "rollback": "turbo run rollback",
     "format:check:staged": "lint-staged",
     "deploy:local:auth": "docker-compose  -f docker/docker-compose.auth.yml up --build -d",
+    "down:local:auth": "docker-compose  -f docker/docker-compose.auth.yml down",
     "docker:build:auth": "docker build -t auth -f services/auth/Dockerfile --no-cache .",
     "clean": "turbo run clean && rm -rf node_modules",
     "prepare": "husky install"
