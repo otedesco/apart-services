@@ -2,7 +2,7 @@ import { BaseModel } from 'commons';
 
 import { ORGANIZATION_TABLE } from '../../../configs/DBConfig';
 import { Profile } from '../../profile/interfaces/Profile';
-import { Profiles } from '../../profile/models/ProfileModel';
+import Profiles  from '../../profile/models/ProfileModel';
 import { Organization } from '../interfaces/Organization';
 
 export class Organizations extends BaseModel implements Organization {

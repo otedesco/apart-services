@@ -1,6 +1,6 @@
 import { generateHash, compareWithHash } from 'commons';
 import _ from 'lodash';
-import { notifyAsync } from 'notifier';
+import { notify } from 'notifier';
 import { Transaction } from 'objection';
 
 import {  SALT_ROUNDS } from '../../../configs/AppConfig';
@@ -53,7 +53,7 @@ async function create(payload: Account, tx?: Transaction): Promise<SecuredAccoun
   const accountData = await mapAccountData(payload);
   const account = await sanitize(CachedAccountRepository.create(accountData, tx));
 
-  if (account) notifyAsync(AccountConfig.topic, AccountConfig.createdEvent, account);
+  if (account) notify(AccountConfig.topic, AccountConfig.createdEvent, account);
 
   return account;
 }

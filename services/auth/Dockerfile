@@ -26,7 +26,7 @@ WORKDIR /app
 COPY --from=builder /app .
 RUN pnpm install --filter auth --ignore-scripts --prod
 
-FROM build-environment as migration
+FROM build-enviroment as migration
 WORKDIR /app
 COPY --from=builder /app .
 CMD pnpm run migrate

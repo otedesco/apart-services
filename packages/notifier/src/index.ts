@@ -1,62 +1,33 @@
 import _ from 'lodash';
 
-import { sendMessage } from './providers/Kafka/Producer';
+import { Producer } from './providers/Kafka';
 
-export interface CallBack<T> {
-  (msg: T): void
-}
-
-export type Event = {};
-
-interface Strategy {
-  (topic: string, evt: Event): Promise<any>
-}
-
-function buildEvent<T>(topic: string, suffix: string, message: T) {
-  return { 
-    name: `${topic}${suffix}`,
-    timestamp: Date.now(),
-    payload: message,
-  };
-}
-
-function validateRequiredParams(topic: string, suffix: string) {
+const validateRequiredParams = (topic: string, suffix: string) => {
   if (typeof topic !== 'string' || typeof suffix !== 'string') {
-    throw new Error('topic and eventName arguments must be string');
+    throw new Error('topic and suffix arguments must be string');
   }
-}
+};
 
-async function notify<T>(
-  topic: string, suffix: string, message: T, strategy: Strategy, callBack?: CallBack<T>,
-): Promise<boolean> {
+const mapMessagesToEvents = <T>(messages:T, name: string, metadata = {}) => {
+  const messagesToDispatch = Array.isArray(messages) ? messages : [messages];
+  const timestamp = Date.now();
+  
+  return messagesToDispatch.map((payload: T) => (
+    { timestamp, name, payload, metadata }),
+  );
+};
+
+export const notify = async <T>(
+  topic: string, suffix: string, messages: T, metadata = {}, callback?: (tpc: string, msgs: T)=> void) => {
   validateRequiredParams(topic, suffix);
 
-  if (!_.isEmpty(message)) {
-    await strategy(topic, buildEvent(topic, suffix, message));
-    if (callBack && typeof callBack === 'function') callBack(message);
-
-    return true;
+  if (!_.isEmpty(messages)) {
+    const msgs = mapMessagesToEvents(messages, suffix, metadata);
+    const isSent = await Producer.validateAndSend(topic, msgs);
+    if (isSent && callback) {
+      callback(topic, messages);
+    }
   }
+};
 
-  return false;
-}
-
-export function notifySync<T>(
-  topic: string, suffix: string, message: T, callBack?: CallBack<T>) {
-  return notify(
-    topic, suffix, message, async () => {}, callBack,
-  );
-}
-
-
-
-export async function notifyAsync<T>(
-  topic: string, suffix: string, message: T, callBack?: CallBack<T>) {
-  const sent = await notify(topic, suffix, message, sendMessage, callBack);
-
-  if (sent) {
-    // Implement some monitoring here
-  }
-}
-
-export * as Producer from './providers/Kafka/Producer';
+// TODO: implement Syncronous Notify and diferents providers logic

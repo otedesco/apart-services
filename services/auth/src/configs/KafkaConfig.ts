@@ -1,5 +1,4 @@
 import { config } from 'dotenv';
-import { Producer } from 'notifier';
 
 import { PREFIX } from './AppConfig';
 config({ path: `.env.${process.env.NODE_ENV || 'development'}.local` });
@@ -20,7 +19,7 @@ export const KAFKA_ENABLE_DELIVERY_REPORT = environment.KAFKA_ENABLE_DELIVERY_RE
 const clientConfig = {
   'metadata.broker.list': KAFKA_HOST_MICROSERVICES,
   'client.id': `apart-${PREFIX}`,
-  'compression.codec': KAFKA_COMPRESSION_CODEC as Producer.ProducerConfig['compression.codec'],
+  'compression.codec': KAFKA_COMPRESSION_CODEC,
   'retry.backoff.ms': KAFKA_RETRY_BACKOFF_MS,
   'message.send.max.retries': KAFKA_SEND_MAX_RETRIES,
   'socket.keepalive.enable': Boolean(KAFKA_SOCKET_KEEP_ALIVE) || true,
@@ -36,7 +35,7 @@ const DELETED = 'deleted';
 export const TOPIC_PREFIX = environment.KAFKA_TOPIC_PREFIX || `apart-${PREFIX}`;
 export const PRODUCER_POLL_INTERVAL = Number(environment.PRODUCER_POLL_INTERVAL) || 100;
 
-export const producerConfig: Producer.ProducerConfig = {
+export const producerConfig = {
   enabled: PRODUCE_EVENTS,
   prefix: TOPIC_PREFIX,
   producerPollInterval: PRODUCER_POLL_INTERVAL,

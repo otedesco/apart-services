@@ -1,88 +1,74 @@
-import _ from 'lodash';
-import { Producer, ProducerGlobalConfig } from 'node-rdkafka';
-import type { LoggerFactory } from 'server-utils';
+import { CompressionTypes, Kafka, Logger, Producer, ProducerConfig } from 'kafkajs';
+
+import * as Conn from './Connection';
 
 
-export type ProducerConfig = ProducerGlobalConfig &  {
-  logger?: LoggerFactory['logger'],
-  enabled: boolean,
-  prefix: string
-  producerPollInterval: number
+const DEFAULT_REQUIRE_ACKS = 1;
+
+// TODO: Implement KAFKA_PRODUCER configs like KAFKA_CLIENT configs
+
+const toKafkaMessage = <T>(message: T) => {
+  const messagesRaw = Array.isArray(message) ? message : [message];
+
+  const messages = messagesRaw.map(({ name, matadata, timestamp, payload }) => ({
+    key: name,
+    headers: matadata,
+    timestamp,
+    value: typeof payload === 'object' ? JSON.stringify(payload) : payload.toString(),
+  }));
+
+  return messages;
 };
 
-let producer: Producer;
-
-let producerConfig:ProducerConfig;
-
-const getKafkaProducerConfig = (): ProducerGlobalConfig => 
-  _.omit(producerConfig, ['logger', 'enabled', 'prefix', 'producerPollInterval']);
-
-export interface Init {
-  (cfg: ProducerGlobalConfig): Producer
+export interface Config {
+  requireAcks?: number, topic: string
 }
 
-const startConnection = (initFn: Init) => {
-  producerConfig.logger?.debug('Kafka starting connection');
-  const client = initFn(getKafkaProducerConfig());
-  client.connect();
-
-  return client;
+const getProducerConfig = () => {
+  return {};
 };
 
-const initProducer = (config: ProducerGlobalConfig) => new Producer(config);
+class KafkaProducer {
+  private kafkaClient: Kafka;
 
-const getConnection = () => producer;
+  public producer: Producer;
 
-export function start(config: ProducerConfig) {
-  if (!config.enabled) return null;
-  producerConfig = config;
+  public logger: Logger;
 
-  if (!producer) {
-    producer = startConnection(initProducer);
+  private topic: string;
+
+  private requireAcks: number;
+
+  /**
+   * KafkaProducer. Used to produce messages to a topic on a host
+   *
+   * @param {Object} [config={}] Connection configuration object
+   * @param {string} config.topic Kafka topic to connect to
+   * @param {integer} [config.requireAcks=1] Configuration for when to consider a message as acknowledged
+   */
+  constructor(config: Config & Conn.KafkaClientConfig & ProducerConfig) {
+    const {
+      requireAcks = DEFAULT_REQUIRE_ACKS,
+      topic,
+    } = config;
+
+    this.kafkaClient = Conn.getClientPerHost();
+    this.producer = this.kafkaClient.producer(getProducerConfig());
+    this.producer.connect();
     
-    producer.on('ready', () => {
-      producerConfig.logger?.debug('Kafka producer connection ready');
-    });
-
-    producer.on('connection.failure', (err) => {
-      producerConfig.logger?.error(`Error on producer ${err}`);
-    });
-
-    producer.setPollInterval(producerConfig.producerPollInterval || 100);
+    this.logger = this.producer.logger();
+    this.topic = topic;
+    this.requireAcks = requireAcks;
   }
 
-  return producer;
+  send<T>(messages: T) {
+    return this.producer.send({
+      compression: CompressionTypes.GZIP,
+      topic: this.topic,
+      messages: toKafkaMessage(messages),
+      acks: this.requireAcks,
+    });
+  }
 }
 
-
-const retryProduce = (newTopic: string, bufferedMessage: Buffer) => {
-  let conn;
-  try {
-    if (producerConfig.enabled) conn = getConnection();
-    conn?.produce(newTopic, null, bufferedMessage);
-  } catch (err) {
-    producerConfig.logger?.error(`Error:\n${err}`);
-    producerConfig.logger?.warn(`Retrying SendMessage on topic ${newTopic} for message ${bufferedMessage.toString()}`);
-    conn?.poll();
-    conn?.produce(newTopic, null, bufferedMessage);
-  }
-};
-
-export async function sendMessage(topic: string, message: any): Promise<void> {
-  if (!producerConfig.prefix) throw new Error('prefix variable is not configured');
-
-  const messageParsed = typeof message === 'object'
-    ? JSON.stringify(message)
-    : message.toString();
-
-  const bufferedMessage = Buffer.from(messageParsed);
-  const newTopic = `${producerConfig.prefix}_${topic}`;
-
-  producerConfig.logger?.debug(`New message for topic: ${newTopic}, message: ${bufferedMessage}`);
-
-  try {
-    retryProduce(newTopic, bufferedMessage);
-  } catch (err) {
-    producerConfig.logger?.error(`Error on sendMessage: ${err}`);
-  }
-}
+export default KafkaProducer;
