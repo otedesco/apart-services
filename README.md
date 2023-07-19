@@ -1,81 +1,142 @@
-# Turborepo starter
+# Apart microservices backend monorepo
 
-This is an official starter Turborepo.
+Microservices architecture backend, built with Node.js and Typescript using Turborepo.
 
-## Using this example
 
-Run the following command:
+## Folder structure
 
-```sh
-npx create-turbo@latest
+    .
+    ├── docker                      # docker-compose infraestructure definitions              
+    ├── packages                    # Utilities libraries and services abstractions
+    |   ├── cache                   # Cache implementation for Redis
+    │   ├── common                  # Common utitilities (JWT, Encription...)
+    │   ├── eslint-config-custom    # Common Eslint configuration for every project
+    |   ├── notifier                # Kafka implementation abstraction
+    |   ├── server-utils            # Server implementation utilities
+    |   └── tsconfig                # Common ts config files
+    ├── services
+    |   ├── auth                    # Authentication server
+    │   ├── notifications           # Notifications woker
+    │   └── properties              # Properties server
+    ├── .dockerignore
+    ├── .editorconfig
+    ├── .eslintrc
+    ├── .gitattributes
+    ├── .gitignore
+    ├── .lintstagedrc.json
+    ├── .npmrc
+    ├── package.json
+    ├── pnpm-lock.yaml
+    ├── pnpm-workspace.yaml
+    ├── README.md
+    ├── tsconfig.json               
+    └── turbo.json
+
+
+## Requirements
+
+- node v18.x
+- pnpm v7.15.x
+- docker
+- docker-compose v2.19.x
+
+## Run locally in development mode
+
+Install required dependencies
+
+```bash
+  pnpm install
 ```
 
-## What's inside?
+For local development every service will use ```.env.development.local``` file, which is not included on this repository, every service has its own ```.env.example.local``` with the example environment variables that can be used for development porpuses
 
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `ui`: a stub React component library shared by both `web` and `docs` applications
-- `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `tsconfig`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm build
+```bash
+  cd services/{service}
+  cp .env.example.local .env.development.local
 ```
 
-### Develop
+Some services will need an especific infrastructure, in that case there is a docker compose file with the infrastructure required for every service for example for the authentication service (`services/auth`) will run Redis, Postgres and another docker-compose file with Kafka and Zookeeper.
 
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm dev
+```bash
+  pnpm run deploy:local:auth
 ```
 
-### Remote Caching
+Some services will use a Database like Postgres for those services there is an script to run required migrations (This will run ```migrate``` script on every service where the script is defined)
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
+```bash
+pnpm run migrate
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+The following command will run every service with nodemon on watch mode also will use `tsup` on watch mode for every package with the dev script defined
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
+```bash
+  pnpm run dev
 ```
 
-## Useful Links
+## Useful commands
 
-Learn more about the power of Turborepo:
+Transpile and build every package and service where ```build``` script is defined
 
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+```bash
+  pnpm run build
+```
+
+Run every package and service on development mode
+
+```bash
+  pnpm run dev
+```
+
+Run every service builded with the ```start``` script defined
+
+```bash
+  pnpm run start
+```
+
+Run linter for every project
+
+```bash
+  pnpm run lint
+```
+
+Fix all autofixable linter errors for every project
+
+```bash
+  pnpm run lint:fix
+```
+
+Runs migrations for every service with that script defined
+
+```bash
+  pnpm run migrate
+```
+
+Runs migrations rollback for every service with that script defined
+
+```bash
+  pnpm run rollback
+```
+
+Deploy all the infrastructure required for ```services/auth``` including the auth service using docker compose
+
+```bash
+  pnpm run deploy:local:auth
+```
+
+Shutdown all the infrastructure required for ```services/auth``` including the auth service using docker-compose
+
+```bash
+  pnpm run down:local:auth
+```
+
+Build docker container for ```services/auth```
+
+```bash
+  pnpm run docker:build:auth
+```
+
+Runs every project clean script if it is defined, used to delete ```dist``` and ```node_modules``` folders
+
+```bash
+  pnpm run clean
+```
